@@ -43,6 +43,9 @@ export enum GameEvent {
 
   // Score
   SCORE_UPDATE = 'score:update',
+
+  // Obstacles
+  OBSTACLE_CLEARED = 'obstacle:cleared',
 }
 
 /** Player input actions — union of all possible inputs */
@@ -52,8 +55,6 @@ export enum InputAction {
   JUMP = 'jump',
   SPIN_LEFT = 'spinLeft',
   SPIN_RIGHT = 'spinRight',
-  GRAB = 'grab',
-  MANUAL = 'manual',
   RESTART = 'restart',
   PAUSE = 'pause',
 }
@@ -75,7 +76,6 @@ export interface TrickResult {
   readonly trick: TrickDefinition;
   readonly score: number;
   readonly multiplier: number;
-  readonly isPerfect: boolean;
 }
 
 /** Current combo chain state */
@@ -102,8 +102,6 @@ export enum PlayerState {
   RUNNING = 'running',
   JUMPING = 'jumping',
   FALLING = 'falling',
-  GRABBING = 'grabbing',
-  MANUAL = 'manual',
   SPINNING = 'spinning',
   LANDED = 'landed',
   STUNNED = 'stunned',

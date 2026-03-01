@@ -9,8 +9,7 @@ import { UI_COLORS } from '../../types/ui';
 const BUTTON_IDLE_ALPHA = 0.3;
 const BUTTON_ACTIVE_ALPHA = 0.55;
 const DPAD_RADIUS = 36;
-const JUMP_RADIUS = 44;
-const ACTION_RADIUS = 30;
+const JUMP_RADIUS = 56;
 const PAUSE_SIZE = 36;
 const LABEL_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
   fontFamily: 'Arial Black, Arial, sans-serif',
@@ -31,8 +30,6 @@ export class TouchControls extends Phaser.GameObjects.Container {
 
     this.createDpad(width, height);
     this.createJumpButton(width, height);
-    this.createGrabButton(width, height);
-    this.createManualButton(width, height);
     this.createPauseButton(width, height);
 
     this.setDepth(200);
@@ -83,20 +80,6 @@ export class TouchControls extends Phaser.GameObjects.Container {
     const y = height - 90;
 
     this.createTapButton(x, y, JUMP_RADIUS, 'JUMP', InputAction.JUMP, UI_COLORS.PRIMARY);
-  }
-
-  private createGrabButton(width: number, height: number): void {
-    const x = width - 180;
-    const y = height - 70;
-
-    this.createHoldButton(x, y, ACTION_RADIUS, 'GRAB', InputAction.GRAB, UI_COLORS.COMBO_FIRE);
-  }
-
-  private createManualButton(width: number, height: number): void {
-    const x = width - 180;
-    const y = height - 140;
-
-    this.createHoldButton(x, y, ACTION_RADIUS, 'MAN', InputAction.MANUAL, UI_COLORS.SUCCESS);
   }
 
   private createPauseButton(width: number, _height: number): void {

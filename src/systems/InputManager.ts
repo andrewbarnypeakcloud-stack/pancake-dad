@@ -9,7 +9,7 @@ export class InputManager {
   private scene: Phaser.Scene;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private wasd!: { W: Phaser.Input.Keyboard.Key; A: Phaser.Input.Keyboard.Key; S: Phaser.Input.Keyboard.Key; D: Phaser.Input.Keyboard.Key };
-  private actionKeys!: { J: Phaser.Input.Keyboard.Key; K: Phaser.Input.Keyboard.Key; R: Phaser.Input.Keyboard.Key; ESC: Phaser.Input.Keyboard.Key };
+  private actionKeys!: { R: Phaser.Input.Keyboard.Key; ESC: Phaser.Input.Keyboard.Key };
 
   private touchControls: TouchControls | null = null;
   private isMobile: boolean;
@@ -51,8 +51,6 @@ export class InputManager {
       D: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
     };
     this.actionKeys = {
-      J: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J),
-      K: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K),
       R: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R),
       ESC: keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC),
     };
@@ -82,16 +80,6 @@ export class InputManager {
       if (this.cursors.right?.isDown || this.wasd.D.isDown) {
         actions.add(InputAction.SPIN_RIGHT);
       }
-    }
-
-    // Grab
-    if (this.actionKeys.J.isDown) {
-      actions.add(InputAction.GRAB);
-    }
-
-    // Manual
-    if (this.actionKeys.K.isDown) {
-      actions.add(InputAction.MANUAL);
     }
 
     // Restart

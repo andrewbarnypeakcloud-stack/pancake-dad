@@ -11,8 +11,10 @@ import { Dad, DEFAULT_PHYSICS } from '../entities/Dad';
 import { Pancake } from '../entities/Pancake';
 import { Pan } from '../entities/Pan';
 import { Hazard } from '../entities/Hazard';
+import { Platform } from '../entities/Platform';
 import { InputManager } from '../systems/InputManager';
 import { TrickSystem } from '../systems/TrickSystem';
+import { ObstacleScoreSystem } from '../systems/ObstacleScoreSystem';
 import { ComboSystem } from '../systems/ComboSystem';
 import { SpecialMeterSystem } from '../systems/SpecialMeterSystem';
 import { AudienceMeterSystem } from '../systems/AudienceMeterSystem';
@@ -42,6 +44,8 @@ export class GameScene extends Phaser.Scene {
   private comboSystem!: ComboSystem;
   private specialMeterSystem!: SpecialMeterSystem;
   private audienceMeterSystem!: AudienceMeterSystem;
+  private obstacleScoreSystem!: ObstacleScoreSystem;
+  private platforms: Platform[] = [];
 
   private timeRemaining: number = GAME_CONFIG.RUN_DURATION_SECONDS;
   private timerEvent!: Phaser.Time.TimerEvent;
@@ -145,6 +149,27 @@ export class GameScene extends Phaser.Scene {
       );
     }
 
+    // Create platforms from level definition
+    this.platforms = [];
+    if (levelDef?.platforms) {
+      for (const platDef of levelDef.platforms) {
+        const px = platDef.x * width;
+        const py = platDef.y * height;
+        const platform = new Platform(this, px, py, platDef.width, platDef.height, platDef.elevated);
+        this.platforms.push(platform);
+
+        // Dad collides with platforms (can stand on elevated, bumps into hurdles)
+        this.physics.add.collider(this.dad, platform as unknown as Phaser.GameObjects.GameObject);
+        // Pancake landing on platform counts as drop
+        this.physics.add.collider(this.pancake, platform as unknown as Phaser.GameObjects.GameObject, () => {
+          this.pancake.onHitFloor();
+          this.time.delayedCall(500, () => {
+            this.pancake.resetToPan(this.pan.x, this.pan.y - 10);
+          });
+        });
+      }
+    }
+
     // Create systems
     this.inputManager = new InputManager(this);
     this.trickSystem = new TrickSystem(this, this.dad, this.pancake);
@@ -152,6 +177,7 @@ export class GameScene extends Phaser.Scene {
     this.specialMeterSystem = new SpecialMeterSystem(this);
     this.audienceMeterSystem = new AudienceMeterSystem(this);
     this.comboSystem.setAudienceMeterSystem(this.audienceMeterSystem);
+    this.obstacleScoreSystem = new ObstacleScoreSystem(this, this.dad, this.platforms);
 
     // Apply slipper fill rate bonus
     if (slipperItem?.effect?.['specialFillRate']) {
@@ -249,6 +275,7 @@ export class GameScene extends Phaser.Scene {
     this.pancake.update(time, delta);
     this.trickSystem.update(actions, delta);
     this.audienceMeterSystem.update(delta);
+    this.obstacleScoreSystem.update();
 
     // Check pancake catch/drop
     this.checkPancakeCatch();
@@ -287,6 +314,11 @@ export class GameScene extends Phaser.Scene {
 
     this.events.on(GameEvent.PANCAKE_DROPPED, () => {
       this.comboSystem.onPancakeDropped();
+    });
+
+    this.events.on(GameEvent.OBSTACLE_CLEARED, (data: { score: number; isFlipBonus: boolean }) => {
+      this.comboSystem.onTrickComplete(data.score);
+      this.tricksLanded++;
     });
 
     this.events.on(GameEvent.PANCAKE_CAUGHT, () => {
@@ -401,8 +433,7 @@ export class GameScene extends Phaser.Scene {
     const instructions = [
       { icon: '< >', text: 'ARROWS  \u2014  Move left / right' },
       { icon: 'JUMP', text: 'TAP  \u2014  Jump & flip pancake' },
-      { icon: 'GRAB', text: 'HOLD in air  \u2014  Grab trick (+style)' },
-      { icon: 'MAN', text: 'HOLD on ground  \u2014  Manual (extend combo)' },
+      { icon: 'SPIN', text: 'MOVE + JUMP  \u2014  Spin for more points!' },
       { icon: '||', text: 'TOP-RIGHT  \u2014  Pause game' },
     ];
 
@@ -433,7 +464,7 @@ export class GameScene extends Phaser.Scene {
     });
 
     // Tip
-    const tip = this.add.text(width / 2, height * 0.72, 'TIP: Hold MOVE + JUMP together to SPIN!', {
+    const tip = this.add.text(width / 2, height * 0.72, 'TIP: Jump over obstacles for bonus points!', {
       fontFamily: 'Arial, sans-serif',
       fontSize: '16px',
       color: '#f5a623',

@@ -25,31 +25,6 @@
       "requiresSpecialMeter": false
     },
     {
-      "id": "the-grab",
-      "name": "The Grab",
-      "input": {
-        "actions": ["jump", "grab"],
-        "holdDuration": 0.3,
-        "requiresAirborne": true
-      },
-      "baseScore": 250,
-      "description": "Clutches spatula mid-air",
-      "isSignature": false,
-      "requiresSpecialMeter": false
-    },
-    {
-      "id": "the-knee-flip",
-      "name": "The Knee Flip",
-      "input": {
-        "actions": ["manual", "jump"],
-        "requiresAirborne": true
-      },
-      "baseScore": 200,
-      "description": "Flips pancake off the knee",
-      "isSignature": false,
-      "requiresSpecialMeter": false
-    },
-    {
       "id": "the-blind-flip",
       "name": "The Blind Flip",
       "input": {
@@ -60,19 +35,6 @@
       "description": "Back turned, no-look catch",
       "isSignature": false,
       "requiresSpecialMeter": false
-    },
-    {
-      "id": "the-double-stack",
-      "name": "The Double Stack",
-      "input": {
-        "actions": ["jump", "grab", "spinLeft"],
-        "holdDuration": 0.3,
-        "requiresAirborne": true
-      },
-      "baseScore": 600,
-      "description": "Two pancakes at once",
-      "isSignature": false,
-      "requiresSpecialMeter": false
     }
   ],
   "signature": [
@@ -80,11 +42,11 @@
       "id": "perfect-flip",
       "name": "Perfect Flip",
       "input": {
-        "actions": ["jump", "spinLeft", "grab"],
+        "actions": ["jump", "spinLeft", "spinRight"],
         "requiresAirborne": true
       },
       "baseScore": 1000,
-      "description": "360 spin, eyes closed — pure dad instinct",
+      "description": "360 spin both ways, eyes closed — pure dad instinct",
       "isSignature": true,
       "requiresSpecialMeter": true,
       "dadId": "gary"
@@ -93,11 +55,11 @@
       "id": "double-pirouette-catch",
       "name": "Double Pirouette Catch",
       "input": {
-        "actions": ["jump", "spinLeft", "spinLeft"],
+        "actions": ["jump", "spinLeft", "moveRight"],
         "requiresAirborne": true
       },
       "baseScore": 1200,
-      "description": "Two full pirouettes before snagging the pancake mid-air",
+      "description": "Full pirouette while sliding right — snagging the pancake mid-air",
       "isSignature": true,
       "requiresSpecialMeter": true,
       "dadId": "tomasz"
@@ -106,12 +68,11 @@
       "id": "iron-pan-zero-splash",
       "name": "Iron Pan Zero-Splash Rotation",
       "input": {
-        "actions": ["jump", "grab", "spinRight"],
-        "holdDuration": 0.5,
+        "actions": ["jump", "spinRight", "moveLeft"],
         "requiresAirborne": true
       },
       "baseScore": 1500,
-      "description": "Perfectly controlled rotation — not a single drop of batter spilled",
+      "description": "Perfectly controlled reverse rotation — not a single drop of batter spilled",
       "isSignature": true,
       "requiresSpecialMeter": true,
       "dadId": "kenji"
@@ -120,11 +81,11 @@
       "id": "the-smokestack-900",
       "name": "The Smokestack 900",
       "input": {
-        "actions": ["jump", "spinLeft", "spinLeft", "grab"],
+        "actions": ["jump", "spinLeft", "spinRight", "moveRight"],
         "requiresAirborne": true
       },
       "baseScore": 1800,
-      "description": "Two and a half rotations with maximum altitude — the crowd goes wild",
+      "description": "Full rotation both ways while moving — the crowd goes wild",
       "isSignature": true,
       "requiresSpecialMeter": true,
       "dadId": "marcus"
@@ -133,11 +94,11 @@
       "id": "full-kitchen-lap-blind",
       "name": "Full Kitchen Lap Blind Catch",
       "input": {
-        "actions": ["jump", "moveLeft", "moveRight", "grab"],
+        "actions": ["jump", "moveLeft", "moveRight", "spinLeft", "spinRight"],
         "requiresAirborne": true
       },
       "baseScore": 2000,
-      "description": "Slides across the entire kitchen blindfolded and catches the pancake behind his back",
+      "description": "Slides across the entire kitchen spinning both ways and catches the pancake behind his back",
       "isSignature": true,
       "requiresSpecialMeter": true,
       "dadId": "pawel"

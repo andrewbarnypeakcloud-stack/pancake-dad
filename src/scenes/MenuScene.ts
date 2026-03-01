@@ -169,8 +169,8 @@ export class MenuScene extends Phaser.Scene {
     // Controls hint — platform-aware
     const isMobile = !this.sys.game.device.os.desktop;
     const controlsMessage = isMobile
-      ? 'Tap buttons to move & jump | Hold GRAB in air for tricks'
-      : 'WASD to move | SPACE to jump | J grab | K manual | ESC pause';
+      ? 'Tap buttons to move & jump | Move + Jump = Spin!'
+      : 'WASD to move | SPACE to jump | Move + Jump = Spin! | ESC pause';
     const controlsText = this.add.text(width / 2, height * 0.95, controlsMessage, {
       fontFamily: 'Arial, sans-serif',
       fontSize: '14px',

@@ -126,7 +126,7 @@ test.describe('Pancake Dad Gameplay', () => {
     );
 
     // Should be in an airborne or just-landed state after a jump
-    expect(['jumping', 'falling', 'spinning', 'grabbing', 'landed']).toContain(state);
+    expect(['jumping', 'falling', 'spinning', 'landed']).toContain(state);
   });
 
   test('state machine reports idle when stationary on ground', async ({ page }) => {

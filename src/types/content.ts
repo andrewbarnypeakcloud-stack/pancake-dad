@@ -57,12 +57,22 @@ export interface HazardDefinition {
   readonly effectType: string;
 }
 
+/** Platform or obstacle in a level */
+export interface PlatformDefinition {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+  readonly elevated: boolean;
+}
+
 /** Full definition of a kitchen level / arena */
 export interface LevelDefinition {
   readonly id: string;
   readonly name: string;
   readonly setting: string;
   readonly hazard: HazardDefinition;
+  readonly platforms?: PlatformDefinition[];
   readonly visualStyle: string;
   readonly backgroundLayers: string[];
   readonly musicKey: string;
@@ -76,7 +86,6 @@ export interface LevelDefinition {
 /** Input combination required to perform a trick */
 export interface TrickInput {
   readonly actions: InputAction[];
-  readonly holdDuration?: number;
   readonly requiresAirborne: boolean;
 }
 

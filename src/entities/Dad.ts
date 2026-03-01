@@ -5,11 +5,11 @@ import Phaser from 'phaser';
 import { InputAction, DadPhysicsProfile, PlayerState } from '../types/game';
 
 export const DEFAULT_PHYSICS: DadPhysicsProfile = {
-  speed: 300,
-  jumpForce: 500,
+  speed: 250,
+  jumpForce: 450,
   spinRate: 360,
   airTime: 1.0,
-  gravityScale: 1.0,
+  gravityScale: 0.85,
 };
 
 const LANDED_DURATION_MS = 100;
@@ -82,14 +82,8 @@ export class Dad extends Phaser.GameObjects.Sprite {
 
     // Ground states
     if (grounded) {
-      // Manual
-      if (actions.has(InputAction.MANUAL)) {
-        if (this.currentState !== PlayerState.MANUAL) {
-          this.transitionTo(PlayerState.MANUAL);
-        }
-      }
       // Jump
-      else if (actions.has(InputAction.JUMP)) {
+      if (actions.has(InputAction.JUMP)) {
         this.body.setVelocityY(-this.physics.jumpForce);
         this.transitionTo(PlayerState.JUMPING);
       }
@@ -147,12 +141,6 @@ export class Dad extends Phaser.GameObjects.Sprite {
           this.transitionTo(PlayerState.SPINNING);
         }
       }
-      // Grab
-      else if (actions.has(InputAction.GRAB)) {
-        if (this.currentState !== PlayerState.GRABBING) {
-          this.transitionTo(PlayerState.GRABBING);
-        }
-      }
       // Falling vs Jumping
       else if (this.body.velocity.y > 0) {
         if (this.currentState !== PlayerState.FALLING) {
@@ -160,8 +148,7 @@ export class Dad extends Phaser.GameObjects.Sprite {
         }
       } else if (this.currentState !== PlayerState.JUMPING) {
         // Still ascending, stay in jumping if not already
-        if (this.currentState !== PlayerState.SPINNING &&
-            this.currentState !== PlayerState.GRABBING) {
+        if (this.currentState !== PlayerState.SPINNING) {
           this.transitionTo(PlayerState.JUMPING);
         }
       }
@@ -183,16 +170,7 @@ export class Dad extends Phaser.GameObjects.Sprite {
   isAirborne(): boolean {
     return this.currentState === PlayerState.JUMPING ||
       this.currentState === PlayerState.FALLING ||
-      this.currentState === PlayerState.SPINNING ||
-      this.currentState === PlayerState.GRABBING;
-  }
-
-  getIsGrabbing(): boolean {
-    return this.currentState === PlayerState.GRABBING;
-  }
-
-  getIsInManual(): boolean {
-    return this.currentState === PlayerState.MANUAL;
+      this.currentState === PlayerState.SPINNING;
   }
 
   getRotationDegrees(): number {
