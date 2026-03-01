@@ -95,8 +95,10 @@ export class TimerDisplay extends Phaser.GameObjects.Container {
   }
 
   destroy(fromScene?: boolean): void {
-    this.scene.events.off(GameEvent.RUN_TIMER_TICK, this.onTimerTick, this);
-    this.stopWarningFlash();
+    if (this.scene) {
+      this.scene.events.off(GameEvent.RUN_TIMER_TICK, this.onTimerTick, this);
+      this.stopWarningFlash();
+    }
     super.destroy(fromScene);
   }
 }

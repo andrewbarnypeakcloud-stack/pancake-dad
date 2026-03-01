@@ -187,11 +187,13 @@ export class ComboDisplay extends Phaser.GameObjects.Container {
   }
 
   destroy(fromScene?: boolean): void {
-    this.scene.events.off(GameEvent.COMBO_UPDATE, this.onComboUpdate, this);
-    this.scene.events.off(GameEvent.COMBO_BREAK, this.onComboBreak, this);
-    this.stopPulse();
-    if (this.popTween) {
-      this.popTween.stop();
+    if (this.scene) {
+      this.scene.events.off(GameEvent.COMBO_UPDATE, this.onComboUpdate, this);
+      this.scene.events.off(GameEvent.COMBO_BREAK, this.onComboBreak, this);
+      this.stopPulse();
+      if (this.popTween) {
+        this.popTween.stop();
+      }
     }
     super.destroy(fromScene);
   }

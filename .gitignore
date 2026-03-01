@@ -29,3 +29,6 @@ coverage/
 
 # Vite
 *.local
+
+# Playtest screenshots
+*.png

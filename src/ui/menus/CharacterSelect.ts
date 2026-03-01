@@ -24,8 +24,8 @@ interface DadSelectInfo {
   readonly portraitColor: number;
 }
 
-/** Placeholder dad roster — matches GDD section 4 */
-const DAD_ROSTER: DadSelectInfo[] = [
+/** Dad roster definition — matches GDD section 4 */
+const DAD_ROSTER_BASE: Omit<DadSelectInfo, 'isUnlocked'>[] = [
   {
     id: 'gary',
     name: 'GARY',
@@ -33,7 +33,6 @@ const DAD_ROSTER: DadSelectInfo[] = [
     stats: { speed: 3, spin: 3, precision: 3, airTime: 3, power: 3 },
     signatureTrick: 'Perfect Flip',
     unlockCondition: 'Default',
-    isUnlocked: true,
     portraitColor: 0x4a90d9,
   },
   {
@@ -43,7 +42,6 @@ const DAD_ROSTER: DadSelectInfo[] = [
     stats: { speed: 5, spin: 4, precision: 2, airTime: 2, power: 2 },
     signatureTrick: 'Double Pirouette Catch',
     unlockCondition: 'Score 30,000 in one run',
-    isUnlocked: false,
     portraitColor: 0xe74c3c,
   },
   {
@@ -53,7 +51,6 @@ const DAD_ROSTER: DadSelectInfo[] = [
     stats: { speed: 2, spin: 2, precision: 5, airTime: 3, power: 3 },
     signatureTrick: 'Iron Pan Zero-Splash',
     unlockCondition: 'Complete 3 challenges',
-    isUnlocked: false,
     portraitColor: 0x27ae60,
   },
   {
@@ -63,7 +60,6 @@ const DAD_ROSTER: DadSelectInfo[] = [
     stats: { speed: 2, spin: 3, precision: 2, airTime: 5, power: 4 },
     signatureTrick: 'The Smokestack 900',
     unlockCondition: 'Score 75,000 in one run',
-    isUnlocked: false,
     portraitColor: 0xf5a623,
   },
   {
@@ -73,7 +69,6 @@ const DAD_ROSTER: DadSelectInfo[] = [
     stats: { speed: 3, spin: 5, precision: 3, airTime: 2, power: 2 },
     signatureTrick: 'Full Kitchen Lap Blind Catch',
     unlockCondition: 'Equip max slipper upgrade',
-    isUnlocked: false,
     portraitColor: 0x9b59b6,
   },
 ];
@@ -100,12 +95,22 @@ export class CharacterSelect extends Phaser.GameObjects.Container {
 
     const { width, height } = scene.cameras.main;
 
+    // Build roster with dynamic unlock state from registry
+    const unlockedDads: string[] = scene.registry.get('unlockedDads') ?? ['gary'];
+    const DAD_ROSTER: DadSelectInfo[] = DAD_ROSTER_BASE.map(dad => ({
+      ...dad,
+      isUnlocked: unlockedDads.includes(dad.id),
+    }));
+
+    // Read currently equipped dad
+    this.selectedDadId = (scene.registry.get('equippedDad') as string) ?? 'gary';
+
     // ── Title ──
     const title = scene.add.text(width / 2, height * 0.08, 'CHOOSE YOUR DAD', {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '32px',
       color: '#f5a623',
-      stroke: '#000000',
+      stroke: '#3D2B1F',
       strokeThickness: 3,
     });
     title.setOrigin(0.5, 0.5);
@@ -184,20 +189,29 @@ export class CharacterSelect extends Phaser.GameObjects.Container {
     bg.setStrokeStyle(3, state === 'selected' ? UI_COLORS.PRIMARY : 0x666666);
     container.add(bg);
 
-    // Dad initial letter (placeholder for portrait sprite)
-    const initial = scene.add.text(0, -10, dad.name.charAt(0), {
-      fontFamily: 'Arial Black, Arial, sans-serif',
-      fontSize: '36px',
-      color: dad.isUnlocked ? '#ffffff' : '#555555',
-    });
-    initial.setOrigin(0.5, 0.5);
-    container.add(initial);
+    // Dad sprite (from VoxelTextureGenerator) or fallback initial letter
+    const dadTextureKey = `dad-${dad.id}`;
+    if (scene.textures.exists(dadTextureKey)) {
+      const sprite = scene.add.image(0, -5, dadTextureKey);
+      const scale = Math.min((PORTRAIT_WIDTH - 10) / sprite.width, (PORTRAIT_HEIGHT - 10) / sprite.height);
+      sprite.setScale(scale);
+      if (!dad.isUnlocked) sprite.setTint(0x555555);
+      container.add(sprite);
+    } else {
+      const initial = scene.add.text(0, -10, dad.name.charAt(0), {
+        fontFamily: 'Arial Black, Arial, sans-serif',
+        fontSize: '36px',
+        color: dad.isUnlocked ? '#ffffff' : '#555555',
+      });
+      initial.setOrigin(0.5, 0.5);
+      container.add(initial);
+    }
 
     // Name label below portrait
     const nameText = scene.add.text(0, PORTRAIT_HEIGHT / 2 + 10, dad.name, {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '13px',
-      color: dad.isUnlocked ? '#ffffff' : '#666666',
+      color: dad.isUnlocked ? '#3D2B1F' : '#A09080',
     });
     nameText.setOrigin(0.5, 0);
     container.add(nameText);
@@ -206,7 +220,7 @@ export class CharacterSelect extends Phaser.GameObjects.Container {
     const archetypeText = scene.add.text(0, PORTRAIT_HEIGHT / 2 + 28, dad.archetype, {
       fontFamily: 'Arial, sans-serif',
       fontSize: '10px',
-      color: '#999999',
+      color: '#7A6B5D',
     });
     archetypeText.setOrigin(0.5, 0);
     container.add(archetypeText);
@@ -298,7 +312,7 @@ export class CharacterSelect extends Phaser.GameObjects.Container {
     const panelTitle = this.scene.add.text(0, -20, `${dad.name} - ${dad.archetype}`, {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '18px',
-      color: '#ffffff',
+      color: '#3D2B1F',
     });
     panelTitle.setOrigin(0.5, 0.5);
     this.statsPanel.add(panelTitle);
@@ -312,7 +326,7 @@ export class CharacterSelect extends Phaser.GameObjects.Container {
       const label = this.scene.add.text(-STAT_BAR_WIDTH - 10, y, stat.label, {
         fontFamily: 'Arial, sans-serif',
         fontSize: '12px',
-        color: '#aaaaaa',
+        color: '#7A6B5D',
       });
       label.setOrigin(1, 0.5);
       this.statsPanel.add(label);
@@ -332,7 +346,7 @@ export class CharacterSelect extends Phaser.GameObjects.Container {
       const valueText = this.scene.add.text(STAT_BAR_WIDTH + 8, y, `${value}`, {
         fontFamily: 'Arial, sans-serif',
         fontSize: '12px',
-        color: '#ffffff',
+        color: '#3D2B1F',
       });
       valueText.setOrigin(0, 0.5);
       this.statsPanel.add(valueText);
@@ -362,11 +376,12 @@ export class CharacterSelect extends Phaser.GameObjects.Container {
   }
 
   private onSelectClicked(): void {
-    const selectedDad = DAD_ROSTER.find((d) => d.id === this.selectedDadId);
-    if (!selectedDad || !selectedDad.isUnlocked) return;
+    // Build roster with current unlock state for validation
+    const unlockedDads: string[] = this.scene.registry.get('unlockedDads') ?? ['gary'];
+    if (!unlockedDads.includes(this.selectedDadId)) return;
 
     // Store selection in registry for GameScene to read
-    this.scene.registry.set('selectedDad', this.selectedDadId);
+    this.scene.registry.set('equippedDad', this.selectedDadId);
 
     // Transition to game
     this.scene.cameras.main.fadeOut(200, 0, 0, 0);

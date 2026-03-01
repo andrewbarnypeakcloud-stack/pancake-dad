@@ -92,8 +92,10 @@ export class ScoreDisplay extends Phaser.GameObjects.Container {
   }
 
   destroy(fromScene?: boolean): void {
-    this.scene.events.off(GameEvent.SCORE_UPDATE, this.onScoreUpdate, this);
-    this.scene.events.off(GameEvent.COMBO_UPDATE, this.onComboUpdate, this);
+    if (this.scene) {
+      this.scene.events.off(GameEvent.SCORE_UPDATE, this.onScoreUpdate, this);
+      this.scene.events.off(GameEvent.COMBO_UPDATE, this.onComboUpdate, this);
+    }
     if (this.popTween) {
       this.popTween.stop();
     }

@@ -191,11 +191,13 @@ export class AudienceMeterUI extends Phaser.GameObjects.Container {
   }
 
   destroy(fromScene?: boolean): void {
-    this.scene.events.off(GameEvent.AUDIENCE_STAGE_CHANGE, this.onStageChange, this);
-    if (this.fillTween) {
-      this.fillTween.stop();
+    if (this.scene) {
+      this.scene.events.off(GameEvent.AUDIENCE_STAGE_CHANGE, this.onStageChange, this);
+      if (this.fillTween) {
+        this.fillTween.stop();
+      }
+      this.stopHysteriaPulse();
     }
-    this.stopHysteriaPulse();
     super.destroy(fromScene);
   }
 }

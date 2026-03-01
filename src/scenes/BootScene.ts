@@ -9,6 +9,7 @@ import { AudioManager } from '../audio/AudioManager';
 import { AUDIO_MANIFEST } from '../audio/AudioManifest';
 import { PersistenceManager } from '../utils/PersistenceManager';
 import { DeepLinkParser } from '../utils/DeepLinkParser';
+import { VoxelTextureGenerator } from '../ui/effects/VoxelTextureGenerator';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -20,7 +21,8 @@ export class BootScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.generatePlaceholderTextures();
+    const textureGen = new VoxelTextureGenerator(this);
+    textureGen.generateAll();
 
     // P4-01: Register DataLoader singleton — validates all JSON content
     DataLoader.register(this);
@@ -98,40 +100,4 @@ export class BootScene extends Phaser.Scene {
     });
   }
 
-  private generatePlaceholderTextures(): void {
-    // Dad placeholder — 48x64 colored rectangle
-    const dadGfx = this.add.graphics();
-    dadGfx.fillStyle(0x4a90d9);
-    dadGfx.fillRect(0, 0, 48, 64);
-    dadGfx.fillStyle(0xf5c6a0);
-    dadGfx.fillCircle(24, 12, 12);
-    dadGfx.fillStyle(0x8b4513);
-    dadGfx.fillRect(4, 56, 16, 8);
-    dadGfx.fillRect(28, 56, 16, 8);
-    dadGfx.generateTexture('dad', 48, 64);
-    dadGfx.destroy();
-
-    // Pancake placeholder — 32x8 oval
-    const pancakeGfx = this.add.graphics();
-    pancakeGfx.fillStyle(0xdaa520);
-    pancakeGfx.fillEllipse(16, 4, 32, 8);
-    pancakeGfx.generateTexture('pancake', 32, 8);
-    pancakeGfx.destroy();
-
-    // Pan placeholder — 56x16
-    const panGfx = this.add.graphics();
-    panGfx.fillStyle(0x555555);
-    panGfx.fillRoundedRect(0, 0, 40, 12, 4);
-    panGfx.fillStyle(0x8b4513);
-    panGfx.fillRect(40, 3, 16, 6);
-    panGfx.generateTexture('pan', 56, 16);
-    panGfx.destroy();
-
-    // Particle placeholder — small square
-    const particleGfx = this.add.graphics();
-    particleGfx.fillStyle(0xffffff);
-    particleGfx.fillRect(0, 0, 4, 4);
-    particleGfx.generateTexture('particle', 4, 4);
-    particleGfx.destroy();
-  }
 }

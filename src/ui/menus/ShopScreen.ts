@@ -56,7 +56,7 @@ export class ShopScreen extends Phaser.GameObjects.Container {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '36px',
       color: '#f5a623',
-      stroke: '#000000',
+      stroke: '#3D2B1F',
       strokeThickness: 3,
     });
     title.setOrigin(0.5, 0.5);
@@ -82,7 +82,7 @@ export class ShopScreen extends Phaser.GameObjects.Container {
     this.panTabText = scene.add.text(width / 2 - 80, tabY, 'PANS', {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '16px',
-      color: '#1a1a2e',
+      color: '#3D2B1F',
     });
     this.panTabText.setOrigin(0.5, 0.5);
     this.add(this.panTabText);
@@ -138,12 +138,12 @@ export class ShopScreen extends Phaser.GameObjects.Container {
 
     if (tab === 'pans') {
       this.panTabButton.setFillStyle(UI_COLORS.PRIMARY);
-      this.panTabText.setColor('#1a1a2e');
+      this.panTabText.setColor('#3D2B1F');
       this.slipperTabButton.setFillStyle(UI_COLORS.SECONDARY);
       this.slipperTabText.setColor('#ffffff');
     } else {
       this.slipperTabButton.setFillStyle(UI_COLORS.PRIMARY);
-      this.slipperTabText.setColor('#1a1a2e');
+      this.slipperTabText.setColor('#3D2B1F');
       this.panTabButton.setFillStyle(UI_COLORS.SECONDARY);
       this.panTabText.setColor('#ffffff');
     }
@@ -177,16 +177,16 @@ export class ShopScreen extends Phaser.GameObjects.Container {
     const state = this.getItemState(item);
 
     // Card background
-    const bgColor = state === 'equipped' ? 0x2a4a2a : 0x222233;
+    const bgColor = state === 'equipped' ? 0xD4EDDA : 0xF0E6D3;
     const bg = this.scene.add.rectangle(0, 0, CARD_WIDTH, CARD_HEIGHT, bgColor);
-    bg.setStrokeStyle(2, state === 'equipped' ? UI_COLORS.SUCCESS : 0x444466);
+    bg.setStrokeStyle(2, state === 'equipped' ? UI_COLORS.SUCCESS : 0xC4A882);
     container.add(bg);
 
     // Item name
     const nameText = this.scene.add.text(-CARD_WIDTH / 2 + 12, -CARD_HEIGHT / 2 + 10, item.name, {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '14px',
-      color: state === 'locked' ? '#666666' : '#ffffff',
+      color: state === 'locked' ? '#A09080' : '#3D2B1F',
     });
     nameText.setOrigin(0, 0);
     container.add(nameText);
@@ -195,7 +195,7 @@ export class ShopScreen extends Phaser.GameObjects.Container {
     const descText = this.scene.add.text(-CARD_WIDTH / 2 + 12, -CARD_HEIGHT / 2 + 30, item.description, {
       fontFamily: 'Arial, sans-serif',
       fontSize: '11px',
-      color: '#999999',
+      color: '#7A6B5D',
     });
     descText.setOrigin(0, 0);
     container.add(descText);
@@ -204,7 +204,7 @@ export class ShopScreen extends Phaser.GameObjects.Container {
     const effectText = this.scene.add.text(-CARD_WIDTH / 2 + 12, -CARD_HEIGHT / 2 + 48, item.effect, {
       fontFamily: 'Arial, sans-serif',
       fontSize: '12px',
-      color: '#88ccff',
+      color: '#4A90D9',
     });
     effectText.setOrigin(0, 0);
     container.add(effectText);
@@ -243,7 +243,7 @@ export class ShopScreen extends Phaser.GameObjects.Container {
       const buyText = this.scene.add.text(0, buttonY, costDisplay, {
         fontFamily: 'Arial Black, Arial, sans-serif',
         fontSize: '11px',
-        color: '#1a1a2e',
+        color: '#3D2B1F',
       });
       buyText.setOrigin(0.5, 0.5);
       container.add(buyText);

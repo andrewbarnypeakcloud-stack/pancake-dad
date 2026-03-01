@@ -173,13 +173,15 @@ export class SpecialMeterUI extends Phaser.GameObjects.Container {
   }
 
   destroy(fromScene?: boolean): void {
-    this.scene.events.off(GameEvent.SPECIAL_METER_UPDATE, this.onMeterUpdate, this);
-    this.scene.events.off(GameEvent.SPECIAL_METER_FULL, this.onMeterFull, this);
-    this.scene.events.off(GameEvent.SPECIAL_METER_DRAIN, this.onMeterDrain, this);
-    if (this.fillTween) {
-      this.fillTween.stop();
+    if (this.scene) {
+      this.scene.events.off(GameEvent.SPECIAL_METER_UPDATE, this.onMeterUpdate, this);
+      this.scene.events.off(GameEvent.SPECIAL_METER_FULL, this.onMeterFull, this);
+      this.scene.events.off(GameEvent.SPECIAL_METER_DRAIN, this.onMeterDrain, this);
+      if (this.fillTween) {
+        this.fillTween.stop();
+      }
+      this.deactivateGlow();
     }
-    this.deactivateGlow();
     super.destroy(fromScene);
   }
 }

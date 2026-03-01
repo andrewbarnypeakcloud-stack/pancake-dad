@@ -40,7 +40,7 @@ export class GameOverScene extends Phaser.Scene {
     const isNewHigh = this.finalScore >= highScore && this.finalScore > 0;
 
     // Background
-    this.cameras.main.setBackgroundColor('#1a1a2e');
+    this.cameras.main.setBackgroundColor('#FFF8E7');
 
     // P4-05: Save game state after run
     this.saveGameState();
@@ -50,7 +50,7 @@ export class GameOverScene extends Phaser.Scene {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '48px',
       color: '#f5a623',
-      stroke: '#000000',
+      stroke: '#3D2B1F',
       strokeThickness: 4,
     }).setOrigin(0.5, 0.5);
 
@@ -68,14 +68,14 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(width / 2, height * 0.24, 'FINAL SCORE', {
       fontFamily: 'Arial, sans-serif',
       fontSize: '16px',
-      color: '#888888',
+      color: '#7A6B5D',
     }).setOrigin(0.5, 0.5);
 
     // Score with count-up animation
     const scoreText = this.add.text(width / 2, height * 0.32, '0', {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '52px',
-      color: '#ffffff',
+      color: '#3D2B1F',
     }).setOrigin(0.5, 0.5);
 
     const scoreCounter = { value: 0 };
@@ -111,7 +111,7 @@ export class GameOverScene extends Phaser.Scene {
       this.add.text(width / 2, height * 0.40, `HIGH SCORE: ${highScore.toLocaleString()}`, {
         fontFamily: 'Arial, sans-serif',
         fontSize: '20px',
-        color: '#888888',
+        color: '#7A6B5D',
       }).setOrigin(0.5, 0.5);
     }
 
@@ -128,13 +128,13 @@ export class GameOverScene extends Phaser.Scene {
       this.add.text(width / 2 - 100, y, item.label, {
         fontFamily: 'Arial, sans-serif',
         fontSize: '16px',
-        color: '#aaaaaa',
+        color: '#7A6B5D',
       }).setOrigin(0, 0.5);
 
       this.add.text(width / 2 + 100, y, item.value, {
         fontFamily: 'Arial Black, Arial, sans-serif',
         fontSize: '16px',
-        color: item.color ?? '#ffffff',
+        color: item.color ?? '#3D2B1F',
       }).setOrigin(1, 0.5);
     });
 
@@ -148,7 +148,7 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(width / 2 - 100, btnY, 'PLAY AGAIN', {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '20px',
-      color: '#1a1a2e',
+      color: '#3D2B1F',
     }).setOrigin(0.5, 0.5);
 
     restartBtn.on('pointerover', () => restartBtn.setFillStyle(0xffb84d));
@@ -159,7 +159,7 @@ export class GameOverScene extends Phaser.Scene {
     });
 
     // Menu
-    const menuBtn = this.add.rectangle(width / 2 + 100, btnY, 180, 50, 0x555555);
+    const menuBtn = this.add.rectangle(width / 2 + 100, btnY, 180, 50, 0x8B6B4A);
     menuBtn.setInteractive({ useHandCursor: true });
     this.add.text(width / 2 + 100, btnY, 'MENU', {
       fontFamily: 'Arial Black, Arial, sans-serif',
@@ -167,8 +167,8 @@ export class GameOverScene extends Phaser.Scene {
       color: '#ffffff',
     }).setOrigin(0.5, 0.5);
 
-    menuBtn.on('pointerover', () => menuBtn.setFillStyle(0x777777));
-    menuBtn.on('pointerout', () => menuBtn.setFillStyle(0x555555));
+    menuBtn.on('pointerover', () => menuBtn.setFillStyle(0xA6845E));
+    menuBtn.on('pointerout', () => menuBtn.setFillStyle(0x8B6B4A));
     menuBtn.on('pointerdown', () => {
       audioManager?.playSFX('menu_click');
       this.scene.start(SCENE_KEYS.MENU);
@@ -178,7 +178,7 @@ export class GameOverScene extends Phaser.Scene {
     this.add.text(width / 2, height * 0.85, 'Press R to restart', {
       fontFamily: 'Arial, sans-serif',
       fontSize: '14px',
-      color: '#666666',
+      color: '#7A6B5D',
     }).setOrigin(0.5, 0.5);
 
     // Keyboard restart

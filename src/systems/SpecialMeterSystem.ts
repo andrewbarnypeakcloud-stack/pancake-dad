@@ -66,6 +66,12 @@ export class SpecialMeterSystem {
     return this.isFull;
   }
 
+  /** Consume the full meter (used when signature trick fires) */
+  consume(): void {
+    if (!this.isFull) return;
+    this.drain(METER_MAX);
+  }
+
   setFillRate(rate: number): void {
     this.fillRate = rate;
   }

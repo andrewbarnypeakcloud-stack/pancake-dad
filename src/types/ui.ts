@@ -45,7 +45,7 @@ export const DEFAULT_HUD_CONFIG: HUDConfig = {
   scorePosition: { anchorX: 0, anchorY: 0, offsetX: 16, offsetY: 16, originX: 0, originY: 0 },
   timerPosition: { anchorX: 0.5, anchorY: 0, offsetX: 0, offsetY: 16, originX: 0.5, originY: 0 },
   comboPosition: { anchorX: 0.5, anchorY: 0.35, offsetX: 0, offsetY: 0, originX: 0.5, originY: 0.5 },
-  audienceMeterPosition: { anchorX: 1, anchorY: 0.15, offsetX: -24, offsetY: 0, originX: 1, originY: 0 },
+  audienceMeterPosition: { anchorX: 1, anchorY: 0.15, offsetX: -40, offsetY: 0, originX: 1, originY: 0 },
   specialMeterPosition: { anchorX: 0.75, anchorY: 0, offsetX: 0, offsetY: 16, originX: 0.5, originY: 0 },
 } as const;
 
@@ -54,7 +54,7 @@ export const MOBILE_HUD_CONFIG: HUDConfig = {
   scorePosition: { anchorX: 0, anchorY: 0, offsetX: 8, offsetY: 8, originX: 0, originY: 0 },
   timerPosition: { anchorX: 0.5, anchorY: 0, offsetX: 0, offsetY: 8, originX: 0.5, originY: 0 },
   comboPosition: { anchorX: 0.5, anchorY: 0.25, offsetX: 0, offsetY: 0, originX: 0.5, originY: 0.5 },
-  audienceMeterPosition: { anchorX: 1, anchorY: 0.1, offsetX: -12, offsetY: 0, originX: 1, originY: 0 },
+  audienceMeterPosition: { anchorX: 1, anchorY: 0.1, offsetX: -28, offsetY: 0, originX: 1, originY: 0 },
   specialMeterPosition: { anchorX: 0.5, anchorY: 0.06, offsetX: 0, offsetY: 0, originX: 0.5, originY: 0 },
 } as const;
 
@@ -157,12 +157,12 @@ export const AUDIENCE_STAGE_LABELS: Record<AudienceStage, string> = {
 export const UI_COLORS = {
   PRIMARY: 0xf5a623,
   PRIMARY_HOVER: 0xffb84d,
-  SECONDARY: 0x555555,
-  SECONDARY_HOVER: 0x777777,
-  BACKGROUND_DARK: 0x1a1a2e,
+  SECONDARY: 0x8B6B4A,
+  SECONDARY_HOVER: 0xA6845E,
+  BACKGROUND_DARK: 0x3D2B1F,
   TEXT_LIGHT: 0xffffff,
-  TEXT_DARK: 0x1a1a2e,
-  TEXT_MUTED: 0x888888,
+  TEXT_DARK: 0x3D2B1F,
+  TEXT_MUTED: 0x7A6B5D,
   DANGER: 0xe74c3c,
   SUCCESS: 0x27ae60,
   COMBO_NORMAL: 0xf5a623,
@@ -178,33 +178,33 @@ export const UI_TEXT_STYLES = {
     fontFamily: 'Arial Black, Arial, sans-serif',
     fontSize: '64px',
     color: '#f5a623',
-    stroke: '#000000',
+    stroke: '#3D2B1F',
     strokeThickness: 6,
   },
   HEADING: {
     fontFamily: 'Arial Black, Arial, sans-serif',
     fontSize: '36px',
-    color: '#ffffff',
+    color: '#3D2B1F',
   },
   BODY: {
     fontFamily: 'Arial, sans-serif',
     fontSize: '20px',
-    color: '#cccccc',
+    color: '#5C4A3A',
   },
   BUTTON: {
     fontFamily: 'Arial Black, Arial, sans-serif',
     fontSize: '24px',
-    color: '#1a1a2e',
+    color: '#3D2B1F',
   },
   HUD_SCORE: {
     fontFamily: 'Arial Black, Arial, sans-serif',
     fontSize: '28px',
-    color: '#1a1a2e',
+    color: '#3D2B1F',
   },
   HUD_TIMER: {
     fontFamily: 'Arial Black, Arial, sans-serif',
     fontSize: '28px',
-    color: '#1a1a2e',
+    color: '#3D2B1F',
   },
   HUD_COMBO: {
     fontFamily: 'Arial Black, Arial, sans-serif',
@@ -214,7 +214,7 @@ export const UI_TEXT_STYLES = {
   MUTED: {
     fontFamily: 'Arial, sans-serif',
     fontSize: '14px',
-    color: '#666666',
+    color: '#7A6B5D',
   },
 } as const;
 

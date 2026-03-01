@@ -32,7 +32,7 @@ export class PauseMenu extends Phaser.GameObjects.Container {
     // ── Panel background ──
     const panelWidth = 340;
     const panelHeight = 360;
-    this.panel = scene.add.rectangle(width / 2, height / 2, panelWidth, panelHeight, 0x1a1a3e);
+    this.panel = scene.add.rectangle(width / 2, height / 2, panelWidth, panelHeight, 0x3D2B1F);
     this.panel.setStrokeStyle(3, UI_COLORS.PRIMARY);
     this.add(this.panel);
 

@@ -108,6 +108,8 @@ export enum AudienceStage {
 export const SCENE_KEYS = {
   BOOT: 'BootScene',
   MENU: 'MenuScene',
+  CHARACTER_SELECT: 'CharacterSelectScene',
+  SHOP: 'ShopScene',
   GAME: 'GameScene',
   GAME_OVER: 'GameOverScene',
 } as const;

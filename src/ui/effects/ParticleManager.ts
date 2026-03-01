@@ -229,13 +229,15 @@ export class ParticleManager {
   }
 
   destroy(): void {
-    this.scene.events.off(GameEvent.PANCAKE_CAUGHT, this.onPancakeCaught, this);
-    this.scene.events.off(GameEvent.PANCAKE_DROPPED, this.onPancakeDropped, this);
-    this.scene.events.off(GameEvent.PANCAKE_FLIPPED, this.onPancakeFlipped, this);
-    this.scene.events.off(GameEvent.ON_FIRE_START, this.onFireStart, this);
-    this.scene.events.off(GameEvent.ON_FIRE_END, this.onFireEnd, this);
-    this.scene.events.off(GameEvent.TRICK_COMPLETE, this.onTrickComplete, this);
-    this.stopFlames();
-    this.stopFlipTrail();
+    if (this.scene) {
+      this.scene.events.off(GameEvent.PANCAKE_CAUGHT, this.onPancakeCaught, this);
+      this.scene.events.off(GameEvent.PANCAKE_DROPPED, this.onPancakeDropped, this);
+      this.scene.events.off(GameEvent.PANCAKE_FLIPPED, this.onPancakeFlipped, this);
+      this.scene.events.off(GameEvent.ON_FIRE_START, this.onFireStart, this);
+      this.scene.events.off(GameEvent.ON_FIRE_END, this.onFireEnd, this);
+      this.scene.events.off(GameEvent.TRICK_COMPLETE, this.onTrickComplete, this);
+      this.stopFlames();
+      this.stopFlipTrail();
+    }
   }
 }

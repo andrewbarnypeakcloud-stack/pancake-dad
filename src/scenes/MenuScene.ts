@@ -35,14 +35,14 @@ export class MenuScene extends Phaser.Scene {
     }
 
     // Background
-    this.cameras.main.setBackgroundColor('#1a1a2e');
+    this.cameras.main.setBackgroundColor('#FFF8E7');
 
     // Title
     const title = this.add.text(width / 2, height * 0.25, 'PANCAKE DAD', {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '64px',
       color: '#f5a623',
-      stroke: '#000000',
+      stroke: '#3D2B1F',
       strokeThickness: 6,
     });
     title.setOrigin(0.5, 0.5);
@@ -61,7 +61,7 @@ export class MenuScene extends Phaser.Scene {
     const subtitle = this.add.text(width / 2, height * 0.35, 'Saturday Morning. Your Moment.', {
       fontFamily: 'Arial, sans-serif',
       fontSize: '20px',
-      color: '#cccccc',
+      color: '#5C4A3A',
       fontStyle: 'italic',
     });
     subtitle.setOrigin(0.5, 0.5);
@@ -79,7 +79,7 @@ export class MenuScene extends Phaser.Scene {
     const playText = this.add.text(width / 2, height * 0.55, 'PLAY', {
       fontFamily: 'Arial Black, Arial, sans-serif',
       fontSize: '28px',
-      color: '#1a1a2e',
+      color: '#3D2B1F',
     });
     playText.setOrigin(0.5, 0.5);
 
@@ -93,26 +93,72 @@ export class MenuScene extends Phaser.Scene {
     });
     playBtn.on('pointerdown', () => {
       audioManager?.playSFX('menu_click');
-      this.cameras.main.fadeOut(300, 26, 26, 46);
+      this.cameras.main.fadeOut(300, 61, 43, 31);
       this.cameras.main.once('camerafadeoutcomplete', () => {
         audioManager?.stopMusic(500);
         this.scene.start(SCENE_KEYS.GAME);
       });
     });
 
+    // Characters button
+    const charsBtn = this.add.rectangle(width / 2, height * 0.65, 200, 50, 0x8B6B4A);
+    charsBtn.setInteractive({ useHandCursor: true });
+    const charsText = this.add.text(width / 2, height * 0.65, 'CHARACTERS', {
+      fontFamily: 'Arial Black, Arial, sans-serif',
+      fontSize: '22px',
+      color: '#ffffff',
+    });
+    charsText.setOrigin(0.5, 0.5);
+
+    charsBtn.on('pointerover', () => {
+      charsBtn.setFillStyle(0xA6845E);
+      this.tweens.add({ targets: [charsBtn, charsText], scaleX: 1.05, scaleY: 1.05, duration: 80 });
+    });
+    charsBtn.on('pointerout', () => {
+      charsBtn.setFillStyle(0x8B6B4A);
+      this.tweens.add({ targets: [charsBtn, charsText], scaleX: 1, scaleY: 1, duration: 80 });
+    });
+    charsBtn.on('pointerdown', () => {
+      audioManager?.playSFX('menu_click');
+      this.scene.start(SCENE_KEYS.CHARACTER_SELECT);
+    });
+
+    // Shop button
+    const shopBtn = this.add.rectangle(width / 2, height * 0.75, 200, 50, 0x8B6B4A);
+    shopBtn.setInteractive({ useHandCursor: true });
+    const shopText = this.add.text(width / 2, height * 0.75, 'SHOP', {
+      fontFamily: 'Arial Black, Arial, sans-serif',
+      fontSize: '22px',
+      color: '#ffffff',
+    });
+    shopText.setOrigin(0.5, 0.5);
+
+    shopBtn.on('pointerover', () => {
+      shopBtn.setFillStyle(0xA6845E);
+      this.tweens.add({ targets: [shopBtn, shopText], scaleX: 1.05, scaleY: 1.05, duration: 80 });
+    });
+    shopBtn.on('pointerout', () => {
+      shopBtn.setFillStyle(0x8B6B4A);
+      this.tweens.add({ targets: [shopBtn, shopText], scaleX: 1, scaleY: 1, duration: 80 });
+    });
+    shopBtn.on('pointerdown', () => {
+      audioManager?.playSFX('menu_click');
+      this.scene.start(SCENE_KEYS.SHOP);
+    });
+
     // High score display
     const highScore: number = this.registry.get('highScore') ?? 0;
-    const highScoreText = this.add.text(width / 2, height * 0.68, `HIGH SCORE: ${highScore.toLocaleString()}`, {
+    const highScoreText = this.add.text(width / 2, height * 0.85, `HIGH SCORE: ${highScore.toLocaleString()}`, {
       fontFamily: 'Arial, sans-serif',
       fontSize: '18px',
-      color: '#888888',
+      color: '#7A6B5D',
     });
     highScoreText.setOrigin(0.5, 0.5);
 
     // Dad Bucks display
     const dadBucks: number = this.registry.get('dadBucks') ?? 0;
     if (dadBucks > 0) {
-      const bucksText = this.add.text(width / 2, height * 0.74, `DAD BUCKS: ${dadBucks} DB`, {
+      const bucksText = this.add.text(width / 2, height * 0.89, `DAD BUCKS: ${dadBucks} DB`, {
         fontFamily: 'Arial, sans-serif',
         fontSize: '16px',
         color: '#f5a623',
@@ -121,15 +167,18 @@ export class MenuScene extends Phaser.Scene {
     }
 
     // Controls hint
-    const controlsText = this.add.text(width / 2, height * 0.88, 'WASD to move | SPACE to jump | J grab | K manual | ESC pause', {
+    const controlsText = this.add.text(width / 2, height * 0.95, 'WASD to move | SPACE to jump | J grab | K manual | ESC pause', {
       fontFamily: 'Arial, sans-serif',
       fontSize: '14px',
-      color: '#666666',
+      color: '#7A6B5D',
     });
     controlsText.setOrigin(0.5, 0.5);
 
-    // Keyboard shortcut: Enter or Space to play
+    // Keyboard shortcuts: Enter or Space to play
     this.input.keyboard?.on('keydown-ENTER', () => {
+      playBtn.emit('pointerdown');
+    });
+    this.input.keyboard?.on('keydown-SPACE', () => {
       playBtn.emit('pointerdown');
     });
   }

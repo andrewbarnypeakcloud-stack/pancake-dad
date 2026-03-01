@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 import { InputAction, GameEvent, TrickDefinition, TrickResult } from '../types/game';
 import { Dad } from '../entities/Dad';
 import { Pancake } from '../entities/Pancake';
+import { SpecialMeterSystem } from './SpecialMeterSystem';
 
 /** Built-in trick definitions (will be loaded from tricks.json via DataLoader later) */
 const BUILT_IN_TRICKS: TrickDefinition[] = [
@@ -65,6 +66,8 @@ export class TrickSystem {
   private dad: Dad;
   private pancake: Pancake;
   private tricks: TrickDefinition[] = BUILT_IN_TRICKS;
+  private signatureTrick: TrickDefinition | null = null;
+  private specialMeterSystem: SpecialMeterSystem | null = null;
 
   private currentInputs: Set<InputAction> = new Set();
   private trickStarted: boolean = false;
@@ -80,6 +83,12 @@ export class TrickSystem {
 
   setTricks(tricks: TrickDefinition[]): void {
     this.tricks = tricks;
+  }
+
+  /** Set the signature trick for the equipped dad */
+  setSignatureTrick(trick: TrickDefinition, specialMeter: SpecialMeterSystem): void {
+    this.signatureTrick = trick;
+    this.specialMeterSystem = specialMeter;
   }
 
   update(actions: Set<InputAction>, delta: number): void {
@@ -145,6 +154,17 @@ export class TrickSystem {
   }
 
   private resolveTrick(): TrickDefinition | null {
+    // Check signature trick first — requires full special meter and matching inputs
+    if (this.signatureTrick && this.specialMeterSystem?.getIsFull()) {
+      const sigMatch = this.signatureTrick.inputs.filter(
+        input => this.currentInputs.has(input)
+      ).length;
+      if (sigMatch === this.signatureTrick.inputs.length) {
+        this.specialMeterSystem.consume();
+        return this.signatureTrick;
+      }
+    }
+
     // Find best matching trick (most inputs matched = highest complexity = best match)
     let bestMatch: TrickDefinition | null = null;
     let bestMatchCount = 0;

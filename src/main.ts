@@ -5,6 +5,8 @@ import Phaser from 'phaser';
 import { GAME_CONFIG } from './types/game';
 import { BootScene } from './scenes/BootScene';
 import { MenuScene } from './scenes/MenuScene';
+import { CharacterSelectScene } from './scenes/CharacterSelectScene';
+import { ShopScene } from './scenes/ShopScene';
 import { GameScene } from './scenes/GameScene';
 import { GameOverScene } from './scenes/GameOverScene';
 
@@ -33,10 +35,10 @@ const config: Phaser.Types.Core.GameConfig = {
       height: GAME_CONFIG.CANVAS_MAX_HEIGHT,
     },
   },
-  scene: [BootScene, MenuScene, GameScene, GameOverScene],
+  scene: [BootScene, MenuScene, CharacterSelectScene, ShopScene, GameScene, GameOverScene],
   render: {
-    pixelArt: false,
-    antialias: true,
+    pixelArt: true,
+    antialias: false,
   },
   fps: {
     target: GAME_CONFIG.TARGET_FPS,

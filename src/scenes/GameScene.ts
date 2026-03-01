@@ -10,12 +10,14 @@ import { DEFAULT_AUDIO_SETTINGS } from '../types/audio';
 import { Dad } from '../entities/Dad';
 import { Pancake } from '../entities/Pancake';
 import { Pan } from '../entities/Pan';
+import { Hazard } from '../entities/Hazard';
 import { InputManager } from '../systems/InputManager';
 import { TrickSystem } from '../systems/TrickSystem';
 import { ComboSystem } from '../systems/ComboSystem';
 import { SpecialMeterSystem } from '../systems/SpecialMeterSystem';
 import { AudienceMeterSystem } from '../systems/AudienceMeterSystem';
-// DataLoader is registered in BootScene — access via DataLoader.getInstance(this)
+import { ChallengeTracker } from '../systems/ChallengeTracker';
+import { DataLoader } from '../data/DataLoader';
 import { AudioManager } from '../audio/AudioManager';
 import { AudioEventBridge } from '../audio/AudioEventBridge';
 import { PersistenceManager } from '../utils/PersistenceManager';
@@ -69,23 +71,72 @@ export class GameScene extends Phaser.Scene {
     this.tricksLanded = 0;
     this.maxCombo = 0;
 
-    // Kitchen background
-    this.cameras.main.setBackgroundColor('#f5e6d0');
+    // Read selected level and dad from registry
+    const selectedLevel = (this.registry.get('selectedLevel') as string) ?? 'the-apartment';
+    const equippedDadId = (this.registry.get('equippedDad') as string) ?? 'gary';
+    const equippedPanId = (this.registry.get('equippedPan') as string) ?? 'non-stick-starter';
+    const equippedSlippersId = (this.registry.get('equippedSlippers') as string) ?? 'terry-cloth-classic';
 
-    // Floor
-    this.floor = this.add.rectangle(width / 2, height - 40, width, 80, 0x8b7355);
+    // Level background — use voxel-generated bg texture
+    const bgKey = `bg-${selectedLevel.replace('the-', '')}`;
+    if (this.textures.exists(bgKey)) {
+      this.add.image(width / 2, height / 2, bgKey);
+    } else {
+      this.cameras.main.setBackgroundColor('#f5e6d0');
+    }
+
+    // Floor tile
+    if (this.textures.exists('floor-tile')) {
+      this.add.image(width / 2, height - 40, 'floor-tile');
+    } else {
+      this.add.rectangle(width / 2, height - 40, width, 80, 0x8b7355);
+    }
+    this.floor = this.add.rectangle(width / 2, height - 40, width, 80, 0x000000, 0);
     this.physics.add.existing(this.floor, true);
 
-    // Create entities
+    // Create entities — apply equipped dad's physics profile
     this.dad = new Dad(this, width * 0.3, height - 120);
+    const dataLoader = DataLoader.getInstance(this);
+    const dadDef = dataLoader.getDad(equippedDadId);
+    if (dadDef) {
+      this.dad.setPhysicsProfile(dadDef.stats);
+      const dadTextureKey = `dad-${equippedDadId}`;
+      if (this.textures.exists(dadTextureKey)) {
+        this.dad.setTexture(dadTextureKey);
+      }
+    }
+
     this.pan = new Pan(this, this.dad);
     this.pancake = new Pancake(this, width * 0.3, height - 160);
+
+    // Apply equipment effects
+    const panItem = dataLoader.getShopItem(equippedPanId);
+    if (panItem?.effect?.['catchRadius']) {
+      this.pan.setCatchRadius(30 * (1 + panItem.effect['catchRadius']));
+    }
+    const slipperItem = dataLoader.getShopItem(equippedSlippersId);
 
     // Physics collisions
     this.physics.add.collider(this.dad, this.floor as unknown as Phaser.GameObjects.GameObject);
     this.physics.add.collider(this.pancake, this.floor as unknown as Phaser.GameObjects.GameObject, () => {
       this.pancake.onHitFloor();
+      // Reset pancake to dad's current position after delay
+      this.time.delayedCall(500, () => {
+        this.pancake.resetToPan(this.pan.x, this.pan.y - 10);
+      });
     });
+
+    // Spawn hazard based on level definition
+    const levelDef = dataLoader.getLevel(selectedLevel);
+    if (levelDef?.hazard) {
+      const hazard = new Hazard(this, width * 0.7, height - 90, levelDef.hazard);
+      hazard.setPatrolBounds(width * 0.4, width * 0.9);
+      this.physics.add.overlap(
+        this.dad,
+        hazard as unknown as Phaser.GameObjects.GameObject,
+        () => hazard.onDadOverlap(this.dad)
+      );
+    }
 
     // Create systems
     this.inputManager = new InputManager(this);
@@ -93,6 +144,32 @@ export class GameScene extends Phaser.Scene {
     this.comboSystem = new ComboSystem(this);
     this.specialMeterSystem = new SpecialMeterSystem(this);
     this.audienceMeterSystem = new AudienceMeterSystem(this);
+
+    // Apply slipper fill rate bonus
+    if (slipperItem?.effect?.['specialFillRate']) {
+      this.specialMeterSystem.setFillRate(1 + slipperItem.effect['specialFillRate']);
+    }
+
+    // Wire signature trick for equipped dad
+    if (dadDef) {
+      const sigTrickContent = dataLoader.getSignatureTrick(equippedDadId);
+      if (sigTrickContent) {
+        const sigTrick: import('../types/game').TrickDefinition = {
+          id: sigTrickContent.id,
+          name: sigTrickContent.name,
+          inputs: sigTrickContent.input.actions,
+          baseScore: sigTrickContent.baseScore,
+          description: sigTrickContent.description,
+          animationKey: `trick_${sigTrickContent.id}`,
+          isSignature: true,
+          requiresSpecialMeter: true,
+        };
+        this.trickSystem.setSignatureTrick(sigTrick, this.specialMeterSystem);
+      }
+    }
+
+    // Wire challenge tracker
+    new ChallengeTracker(this);
 
     // P4-03: Create HUD components (they self-wire via GameEvent listeners)
     new ScoreDisplay(this);
@@ -108,8 +185,9 @@ export class GameScene extends Phaser.Scene {
     const audioManager = this.registry.get('audioManager') as AudioManager | undefined;
     if (audioManager) {
       new AudioEventBridge(this, audioManager);
-      // Start level music
-      this.events.emit(GameEvent.LEVEL_LOADED, 'apartment');
+      // Start level music using selected level's music key
+      const musicLevel = levelDef?.musicKey ?? 'apartment';
+      this.events.emit(GameEvent.LEVEL_LOADED, musicLevel);
     }
 
     // P4-05: Wire auto-save
@@ -145,8 +223,14 @@ export class GameScene extends Phaser.Scene {
 
     const actions = this.inputManager.getActiveActions();
     this.dad.handleInput(actions, delta);
-    this.pancake.update(time, delta);
     this.pan.update();
+
+    // Keep pancake on pan when caught
+    if (this.pancake.isCaught()) {
+      this.pancake.setPosition(this.pan.x, this.pan.y - 10);
+    }
+
+    this.pancake.update(time, delta);
     this.trickSystem.update(actions, delta);
     this.audienceMeterSystem.update(delta);
 

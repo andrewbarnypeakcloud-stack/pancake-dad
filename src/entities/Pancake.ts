@@ -11,13 +11,9 @@ export class Pancake extends Phaser.GameObjects.Sprite {
   private caught: boolean = true;
   private falling: boolean = false;
   private spinSpeed: number = 0;
-  private ownerX: number;
-  private ownerY: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'pancake');
-    this.ownerX = x;
-    this.ownerY = y;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -79,11 +75,6 @@ export class Pancake extends Phaser.GameObjects.Sprite {
     this.body.setVelocity(0, 0);
 
     this.scene.events.emit(GameEvent.PANCAKE_DROPPED);
-
-    // Reset back to pan after a delay
-    this.scene.time.delayedCall(500, () => {
-      this.resetToPan(this.ownerX, this.ownerY - 40);
-    });
   }
 
   resetToPan(x: number, y: number): void {
