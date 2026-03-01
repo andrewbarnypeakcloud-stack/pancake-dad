@@ -166,8 +166,12 @@ export class MenuScene extends Phaser.Scene {
       bucksText.setOrigin(0.5, 0.5);
     }
 
-    // Controls hint
-    const controlsText = this.add.text(width / 2, height * 0.95, 'WASD to move | SPACE to jump | J grab | K manual | ESC pause', {
+    // Controls hint — platform-aware
+    const isMobile = !this.sys.game.device.os.desktop;
+    const controlsMessage = isMobile
+      ? 'Tap buttons to move & jump | Hold GRAB in air for tricks'
+      : 'WASD to move | SPACE to jump | J grab | K manual | ESC pause';
+    const controlsText = this.add.text(width / 2, height * 0.95, controlsMessage, {
       fontFamily: 'Arial, sans-serif',
       fontSize: '14px',
       color: '#7A6B5D',

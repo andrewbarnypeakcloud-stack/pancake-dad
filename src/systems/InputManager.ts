@@ -3,6 +3,7 @@
 
 import Phaser from 'phaser';
 import { InputAction } from '../types/game';
+import { TouchControls } from '../ui/hud/TouchControls';
 
 export class InputManager {
   private scene: Phaser.Scene;
@@ -10,13 +11,8 @@ export class InputManager {
   private wasd!: { W: Phaser.Input.Keyboard.Key; A: Phaser.Input.Keyboard.Key; S: Phaser.Input.Keyboard.Key; D: Phaser.Input.Keyboard.Key };
   private actionKeys!: { J: Phaser.Input.Keyboard.Key; K: Phaser.Input.Keyboard.Key; R: Phaser.Input.Keyboard.Key; ESC: Phaser.Input.Keyboard.Key };
 
-  // Mobile touch state
-  private touchActions: Set<InputAction> = new Set();
+  private touchControls: TouchControls | null = null;
   private isMobile: boolean;
-  private swipeStartY: number = 0;
-  private swipeStartX: number = 0;
-  private swipeStartTime: number = 0;
-  private lastTapTime: number = 0;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
@@ -24,15 +20,23 @@ export class InputManager {
 
     this.setupKeyboard();
     if (this.isMobile) {
-      this.setupTouch();
+      this.touchControls = new TouchControls(scene);
     }
   }
 
   getActiveActions(): Set<InputAction> {
-    if (this.isMobile) {
-      return new Set(this.touchActions);
+    if (this.isMobile && this.touchControls) {
+      return this.touchControls.getActiveActions();
     }
     return this.getKeyboardActions();
+  }
+
+  isMobileDevice(): boolean {
+    return this.isMobile;
+  }
+
+  getTouchControls(): TouchControls | null {
+    return this.touchControls;
   }
 
   private setupKeyboard(): void {
@@ -101,70 +105,5 @@ export class InputManager {
     }
 
     return actions;
-  }
-
-  private setupTouch(): void {
-    const { width } = this.scene.cameras.main;
-
-    this.scene.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      this.swipeStartX = pointer.x;
-      this.swipeStartY = pointer.y;
-      this.swipeStartTime = pointer.time;
-
-      // Double tap detection for restart
-      if (pointer.time - this.lastTapTime < 300) {
-        this.touchActions.add(InputAction.RESTART);
-      }
-      this.lastTapTime = pointer.time;
-
-      // Left/right half movement
-      if (pointer.x < width / 2) {
-        this.touchActions.add(InputAction.MOVE_LEFT);
-      } else {
-        this.touchActions.add(InputAction.MOVE_RIGHT);
-      }
-    });
-
-    this.scene.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      if (!pointer.isDown) return;
-
-      // Hold detection for grab
-      if (pointer.time - this.swipeStartTime > 200) {
-        this.touchActions.add(InputAction.GRAB);
-      }
-    });
-
-    this.scene.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-      const dx = pointer.x - this.swipeStartX;
-      const dy = pointer.y - this.swipeStartY;
-      const dt = pointer.time - this.swipeStartTime;
-
-      // Swipe detection
-      if (dt < 300) {
-        const absDx = Math.abs(dx);
-        const absDy = Math.abs(dy);
-
-        if (absDy > 50 && dy < 0) {
-          // Swipe up → jump
-          this.touchActions.add(InputAction.JUMP);
-          this.scene.time.delayedCall(100, () => this.touchActions.delete(InputAction.JUMP));
-        } else if (absDx > 50) {
-          // Swipe left/right → spin
-          if (dx < 0) {
-            this.touchActions.add(InputAction.SPIN_LEFT);
-            this.scene.time.delayedCall(100, () => this.touchActions.delete(InputAction.SPIN_LEFT));
-          } else {
-            this.touchActions.add(InputAction.SPIN_RIGHT);
-            this.scene.time.delayedCall(100, () => this.touchActions.delete(InputAction.SPIN_RIGHT));
-          }
-        }
-      }
-
-      // Clear movement and grab
-      this.touchActions.delete(InputAction.MOVE_LEFT);
-      this.touchActions.delete(InputAction.MOVE_RIGHT);
-      this.touchActions.delete(InputAction.GRAB);
-      this.touchActions.delete(InputAction.RESTART);
-    });
   }
 }

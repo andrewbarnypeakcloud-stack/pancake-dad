@@ -174,8 +174,12 @@ export class GameOverScene extends Phaser.Scene {
       this.scene.start(SCENE_KEYS.MENU);
     });
 
-    // Controls hint
-    this.add.text(width / 2, height * 0.85, 'Press R to restart', {
+    // Controls hint — platform-aware
+    const isMobile = !this.sys.game.device.os.desktop;
+    const restartHint = isMobile
+      ? 'Tap PLAY AGAIN to restart'
+      : 'Press R to restart';
+    this.add.text(width / 2, height * 0.85, restartHint, {
       fontFamily: 'Arial, sans-serif',
       fontSize: '14px',
       color: '#7A6B5D',
