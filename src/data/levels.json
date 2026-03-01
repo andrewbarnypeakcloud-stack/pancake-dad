@@ -1,0 +1,97 @@
+[
+  {
+    "id": "the-apartment",
+    "name": "The Apartment",
+    "setting": "Tight 1-bed kitchen",
+    "hazard": {
+      "id": "cat-on-counter",
+      "name": "Cat on the Counter",
+      "description": "A curious cat perched on the counter that swats at airborne pancakes",
+      "effectType": "pancake-intercept"
+    },
+    "visualStyle": "Warm yellow, cramped, cozy",
+    "backgroundLayers": [
+      "bg-apartment-far",
+      "bg-apartment-mid",
+      "bg-apartment-near"
+    ],
+    "musicKey": "music-apartment",
+    "unlockOrder": 1
+  },
+  {
+    "id": "the-suburban-home",
+    "name": "The Suburban Home",
+    "setting": "Classic family kitchen",
+    "hazard": {
+      "id": "toddler-underfoot",
+      "name": "Toddler Underfoot",
+      "description": "A wandering toddler who blocks Dad's movement path",
+      "effectType": "movement-block"
+    },
+    "visualStyle": "Suburban pastels, big windows",
+    "backgroundLayers": [
+      "bg-suburban-far",
+      "bg-suburban-mid",
+      "bg-suburban-near"
+    ],
+    "musicKey": "music-suburban",
+    "unlockOrder": 2
+  },
+  {
+    "id": "the-open-plan",
+    "name": "The Open Plan",
+    "setting": "Modern large kitchen",
+    "hazard": {
+      "id": "dog-begging",
+      "name": "Dog Begging at Feet",
+      "description": "An eager dog that jumps for dropped pancakes and trips Dad",
+      "effectType": "trip-hazard"
+    },
+    "visualStyle": "Clean whites, marble surfaces",
+    "backgroundLayers": [
+      "bg-openplan-far",
+      "bg-openplan-mid",
+      "bg-openplan-near"
+    ],
+    "musicKey": "music-openplan",
+    "unlockOrder": 3
+  },
+  {
+    "id": "holiday-morning",
+    "name": "Holiday Morning",
+    "setting": "Christmas chaos",
+    "hazard": {
+      "id": "kids-everywhere",
+      "name": "Kids Everywhere",
+      "description": "Excited children running through the kitchen creating unpredictable obstacles",
+      "effectType": "random-obstacle"
+    },
+    "visualStyle": "Warm reds, fairy lights, snow outside",
+    "backgroundLayers": [
+      "bg-holiday-far",
+      "bg-holiday-mid",
+      "bg-holiday-near"
+    ],
+    "musicKey": "music-holiday",
+    "unlockOrder": 4
+  },
+  {
+    "id": "the-competition",
+    "name": "The Competition",
+    "setting": "TV cooking show set",
+    "hazard": {
+      "id": "live-studio-crowd",
+      "name": "Live Studio Crowd",
+      "description": "The roaring crowd increases pressure — audience meter fills faster but also decays faster",
+      "effectType": "meter-volatility"
+    },
+    "visualStyle": "Bright studio lighting, score ticker",
+    "backgroundLayers": [
+      "bg-competition-far",
+      "bg-competition-mid",
+      "bg-competition-near"
+    ],
+    "musicKey": "music-competition",
+    "unlockOrder": 5
+  }
+]

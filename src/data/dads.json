@@ -1,0 +1,126 @@
+[
+  {
+    "id": "gary",
+    "name": "Gary",
+    "archetype": "The Classic Dad",
+    "stats": {
+      "speed": 1.0,
+      "jumpForce": 1.0,
+      "spinRate": 1.0,
+      "airTime": 1.0,
+      "gravityScale": 1.0,
+      "styleMultiplier": 1.0
+    },
+    "signatureTrick": {
+      "name": "Perfect Flip",
+      "description": "360 spin, eyes closed — pure dad instinct",
+      "baseScore": 1000,
+      "cinematicDuration": 1.5,
+      "requiresFullSpecial": true
+    },
+    "unlockCondition": {
+      "type": "default"
+    },
+    "spriteKey": "dad-gary"
+  },
+  {
+    "id": "tomasz",
+    "name": "Tomasz",
+    "archetype": "The Energetic Dad",
+    "stats": {
+      "speed": 1.3,
+      "jumpForce": 1.0,
+      "spinRate": 1.25,
+      "airTime": 0.95,
+      "gravityScale": 1.05,
+      "styleMultiplier": 0.9
+    },
+    "signatureTrick": {
+      "name": "Double Pirouette Catch",
+      "description": "Two full pirouettes before snagging the pancake mid-air",
+      "baseScore": 1200,
+      "cinematicDuration": 1.5,
+      "requiresFullSpecial": true
+    },
+    "unlockCondition": {
+      "type": "score",
+      "threshold": 30000
+    },
+    "spriteKey": "dad-tomasz"
+  },
+  {
+    "id": "kenji",
+    "name": "Kenji",
+    "archetype": "The Precise Dad",
+    "stats": {
+      "speed": 0.9,
+      "jumpForce": 1.0,
+      "spinRate": 0.95,
+      "airTime": 1.0,
+      "gravityScale": 1.0,
+      "styleMultiplier": 1.4
+    },
+    "signatureTrick": {
+      "name": "Iron Pan Zero-Splash Rotation",
+      "description": "Perfectly controlled rotation — not a single drop of batter spilled",
+      "baseScore": 1500,
+      "cinematicDuration": 1.5,
+      "requiresFullSpecial": true
+    },
+    "unlockCondition": {
+      "type": "challenges",
+      "count": 3
+    },
+    "spriteKey": "dad-kenji"
+  },
+  {
+    "id": "marcus",
+    "name": "Marcus",
+    "archetype": "The Showman",
+    "stats": {
+      "speed": 0.95,
+      "jumpForce": 1.2,
+      "spinRate": 1.0,
+      "airTime": 1.3,
+      "gravityScale": 0.85,
+      "styleMultiplier": 1.0
+    },
+    "signatureTrick": {
+      "name": "The Smokestack 900",
+      "description": "Two and a half rotations with maximum altitude — the crowd goes wild",
+      "baseScore": 1800,
+      "cinematicDuration": 1.5,
+      "requiresFullSpecial": true
+    },
+    "unlockCondition": {
+      "type": "score",
+      "threshold": 75000
+    },
+    "spriteKey": "dad-marcus"
+  },
+  {
+    "id": "pawel",
+    "name": "Pawel",
+    "archetype": "The Slipper King",
+    "stats": {
+      "speed": 1.0,
+      "jumpForce": 0.95,
+      "spinRate": 1.1,
+      "airTime": 1.0,
+      "gravityScale": 1.0,
+      "styleMultiplier": 3.0
+    },
+    "signatureTrick": {
+      "name": "Full Kitchen Lap Blind Catch",
+      "description": "Slides across the entire kitchen blindfolded and catches the pancake behind his back",
+      "baseScore": 2000,
+      "cinematicDuration": 1.5,
+      "requiresFullSpecial": true
+    },
+    "unlockCondition": {
+      "type": "equipment",
+      "itemId": "memory-foam-3000"
+    },
+    "spriteKey": "dad-pawel"
+  }
+]

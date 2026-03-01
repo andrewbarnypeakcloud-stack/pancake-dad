@@ -1,0 +1,103 @@
+{
+  "pans": [
+    {
+      "id": "non-stick-starter",
+      "name": "Non-stick Starter",
+      "description": "Your trusty default pan — no bonus, but it gets the job done",
+      "effect": {},
+      "cost": 0,
+      "category": "pan",
+      "isDefault": true
+    },
+    {
+      "id": "cast-iron-pro",
+      "name": "Cast Iron Pro",
+      "description": "+15% catch radius — the wider surface makes catching easier",
+      "effect": {
+        "catchRadius": 0.15
+      },
+      "cost": 500,
+      "category": "pan",
+      "isDefault": false
+    },
+    {
+      "id": "carbon-steel-racer",
+      "name": "Carbon Steel Racer",
+      "description": "+10% flip speed — lighter weight means faster flips",
+      "effect": {
+        "flipSpeed": 0.10
+      },
+      "cost": 800,
+      "category": "pan",
+      "isDefault": false
+    },
+    {
+      "id": "titanium-competition",
+      "name": "Titanium Competition",
+      "description": "+20% catch radius and flip speed — the professional's choice",
+      "effect": {
+        "catchRadius": 0.20,
+        "flipSpeed": 0.20
+      },
+      "cost": 2000,
+      "category": "pan",
+      "isDefault": false
+    },
+    {
+      "id": "the-heirloom",
+      "name": "The Heirloom",
+      "description": "+Style points on every trick — grandma's pan carries extra flair",
+      "effect": {
+        "styleBonus": 0.25
+      },
+      "cost": 0,
+      "category": "pan",
+      "isDefault": false
+    }
+  ],
+  "slippers": [
+    {
+      "id": "terry-cloth-classic",
+      "name": "Terry Cloth Classic",
+      "description": "Standard dad slippers — comfortable but unremarkable",
+      "effect": {},
+      "cost": 0,
+      "category": "slipper",
+      "isDefault": true
+    },
+    {
+      "id": "rubber-sole-grip",
+      "name": "Rubber Sole Grip",
+      "description": "Better landing stability — reduces landing wobble",
+      "effect": {
+        "landingStability": 0.20
+      },
+      "cost": 400,
+      "category": "slipper",
+      "isDefault": false
+    },
+    {
+      "id": "velvet-spinners",
+      "name": "Velvet Spinners",
+      "description": "+Spin speed with high Slipper Style bonus — smooth as butter",
+      "effect": {
+        "spinSpeed": 0.15,
+        "slipperStyle": 0.30
+      },
+      "cost": 900,
+      "category": "slipper",
+      "isDefault": false
+    },
+    {
+      "id": "memory-foam-3000",
+      "name": "The Memory Foam 3000",
+      "description": "+20% Special Meter fill rate — energy-absorbing technology",
+      "effect": {
+        "specialMeterFill": 0.20
+      },
+      "cost": 1800,
+      "category": "slipper",
+      "isDefault": false
+    }
+  ]
+}

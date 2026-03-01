@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
+      - name: Check bundle size
+        run: |
+          echo "=== Bundle size report ==="
+          # Calculate total gzipped size of all JS assets in dist/
+          TOTAL_BYTES=0
+          for f in dist/assets/*.js; do
+            if [ -f "$f" ]; then
+              SIZE=$(gzip -c "$f" | wc -c)
+              NAME=$(basename "$f")
+              echo "  $NAME: $(( SIZE / 1024 )) KB gzipped"
+              TOTAL_BYTES=$(( TOTAL_BYTES + SIZE ))
+            fi
+          done
+          TOTAL_KB=$(( TOTAL_BYTES / 1024 ))
+          echo ""
+          echo "Total JS bundle: ${TOTAL_KB} KB gzipped"
+          echo ""
+          # Warn if over 1.8 MB (1843 KB)
+          if [ "$TOTAL_KB" -gt 1843 ]; then
+            echo "::warning::Bundle size ${TOTAL_KB} KB exceeds 1.8 MB warning threshold"
+          fi
+          # Fail if over 2 MB (2048 KB)
+          if [ "$TOTAL_KB" -gt 2048 ]; then
+            echo "::error::Bundle size ${TOTAL_KB} KB exceeds 2 MB limit"
+            exit 1
+          fi
+          echo "Bundle size OK (under 2 MB limit)"

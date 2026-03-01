@@ -1,0 +1,146 @@
+{
+  "basic": [
+    {
+      "id": "the-classic",
+      "name": "The Classic",
+      "input": {
+        "actions": ["jump"],
+        "requiresAirborne": true
+      },
+      "baseScore": 100,
+      "description": "Simple clean flip, perfect landing",
+      "isSignature": false,
+      "requiresSpecialMeter": false
+    },
+    {
+      "id": "the-360-dad",
+      "name": "The 360 Dad",
+      "input": {
+        "actions": ["jump", "spinLeft"],
+        "requiresAirborne": true
+      },
+      "baseScore": 300,
+      "description": "Full rotation in slippers",
+      "isSignature": false,
+      "requiresSpecialMeter": false
+    },
+    {
+      "id": "the-grab",
+      "name": "The Grab",
+      "input": {
+        "actions": ["jump", "grab"],
+        "holdDuration": 0.3,
+        "requiresAirborne": true
+      },
+      "baseScore": 250,
+      "description": "Clutches spatula mid-air",
+      "isSignature": false,
+      "requiresSpecialMeter": false
+    },
+    {
+      "id": "the-knee-flip",
+      "name": "The Knee Flip",
+      "input": {
+        "actions": ["manual", "jump"],
+        "requiresAirborne": true
+      },
+      "baseScore": 200,
+      "description": "Flips pancake off the knee",
+      "isSignature": false,
+      "requiresSpecialMeter": false
+    },
+    {
+      "id": "the-blind-flip",
+      "name": "The Blind Flip",
+      "input": {
+        "actions": ["jump", "spinRight"],
+        "requiresAirborne": true
+      },
+      "baseScore": 400,
+      "description": "Back turned, no-look catch",
+      "isSignature": false,
+      "requiresSpecialMeter": false
+    },
+    {
+      "id": "the-double-stack",
+      "name": "The Double Stack",
+      "input": {
+        "actions": ["jump", "grab", "spinLeft"],
+        "holdDuration": 0.3,
+        "requiresAirborne": true
+      },
+      "baseScore": 600,
+      "description": "Two pancakes at once",
+      "isSignature": false,
+      "requiresSpecialMeter": false
+    }
+  ],
+  "signature": [
+    {
+      "id": "perfect-flip",
+      "name": "Perfect Flip",
+      "input": {
+        "actions": ["jump", "spinLeft", "grab"],
+        "requiresAirborne": true
+      },
+      "baseScore": 1000,
+      "description": "360 spin, eyes closed — pure dad instinct",
+      "isSignature": true,
+      "requiresSpecialMeter": true,
+      "dadId": "gary"
+    },
+    {
+      "id": "double-pirouette-catch",
+      "name": "Double Pirouette Catch",
+      "input": {
+        "actions": ["jump", "spinLeft", "spinLeft"],
+        "requiresAirborne": true
+      },
+      "baseScore": 1200,
+      "description": "Two full pirouettes before snagging the pancake mid-air",
+      "isSignature": true,
+      "requiresSpecialMeter": true,
+      "dadId": "tomasz"
+    },
+    {
+      "id": "iron-pan-zero-splash",
+      "name": "Iron Pan Zero-Splash Rotation",
+      "input": {
+        "actions": ["jump", "grab", "spinRight"],
+        "holdDuration": 0.5,
+        "requiresAirborne": true
+      },
+      "baseScore": 1500,
+      "description": "Perfectly controlled rotation — not a single drop of batter spilled",
+      "isSignature": true,
+      "requiresSpecialMeter": true,
+      "dadId": "kenji"
+    },
+    {
+      "id": "the-smokestack-900",
+      "name": "The Smokestack 900",
+      "input": {
+        "actions": ["jump", "spinLeft", "spinLeft", "grab"],
+        "requiresAirborne": true
+      },
+      "baseScore": 1800,
+      "description": "Two and a half rotations with maximum altitude — the crowd goes wild",
+      "isSignature": true,
+      "requiresSpecialMeter": true,
+      "dadId": "marcus"
+    },
+    {
+      "id": "full-kitchen-lap-blind",
+      "name": "Full Kitchen Lap Blind Catch",
+      "input": {
+        "actions": ["jump", "moveLeft", "moveRight", "grab"],
+        "requiresAirborne": true
+      },
+      "baseScore": 2000,
+      "description": "Slides across the entire kitchen blindfolded and catches the pancake behind his back",
+      "isSignature": true,
+      "requiresSpecialMeter": true,
+      "dadId": "pawel"
+    }
+  ]
+}
