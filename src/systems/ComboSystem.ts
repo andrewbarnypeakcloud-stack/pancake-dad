@@ -3,14 +3,20 @@
 
 import Phaser from 'phaser';
 import { GameEvent, ComboState, GAME_CONFIG } from '../types/game';
+import type { AudienceMeterSystem } from './AudienceMeterSystem';
 
 export class ComboSystem {
   private scene: Phaser.Scene;
   private state: ComboState;
+  private audienceMeterSystem: AudienceMeterSystem | null = null;
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
     this.state = this.createFreshState();
+  }
+
+  setAudienceMeterSystem(system: AudienceMeterSystem): void {
+    this.audienceMeterSystem = system;
   }
 
   onTrickComplete(trickScore: number): void {
@@ -26,8 +32,9 @@ export class ComboSystem {
     this.state.onFire = this.state.chain >= GAME_CONFIG.ON_FIRE_THRESHOLD;
 
     const onFireBonus = this.state.onFire ? GAME_CONFIG.ON_FIRE_BONUS : 0;
+    const hysteriaMultiplier = this.audienceMeterSystem?.getMultiplier() ?? 1;
     const scoreWithMultiplier = Phaser.Math.FloorTo(
-      trickScore * this.state.multiplier * (1 + onFireBonus)
+      trickScore * this.state.multiplier * (1 + onFireBonus) * hysteriaMultiplier
     );
 
     this.state.totalScore += scoreWithMultiplier;

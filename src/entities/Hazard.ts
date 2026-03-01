@@ -111,6 +111,9 @@ export class Hazard extends Phaser.GameObjects.Sprite {
     // Emit pancake drop event
     this.scene.events.emit(GameEvent.PANCAKE_DROPPED);
 
+    // Stun the dad (ignores input for 500ms)
+    dad.stun();
+
     // Flash the dad red to indicate a hit
     dad.setTint(0xff0000);
     this.scene.time.delayedCall(TINT_DURATION_MS, () => {

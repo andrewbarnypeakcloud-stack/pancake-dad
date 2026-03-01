@@ -3,11 +3,11 @@
 // Integration tasks: P4-02, P4-03, P4-04, P4-05
 
 import Phaser from 'phaser';
-import { SCENE_KEYS, GameEvent, GAME_CONFIG, ComboState, AudienceStage } from '../types/game';
+import { SCENE_KEYS, GameEvent, GAME_CONFIG, ComboState, AudienceStage, DadPhysicsProfile, TrickResult } from '../types/game';
 import { ECONOMY_CONFIG, DEFAULT_PROGRESSION } from '../types/content';
 import type { SaveData } from '../types/platform';
 import { DEFAULT_AUDIO_SETTINGS } from '../types/audio';
-import { Dad } from '../entities/Dad';
+import { Dad, DEFAULT_PHYSICS } from '../entities/Dad';
 import { Pancake } from '../entities/Pancake';
 import { Pan } from '../entities/Pan';
 import { Hazard } from '../entities/Hazard';
@@ -99,7 +99,14 @@ export class GameScene extends Phaser.Scene {
     const dataLoader = DataLoader.getInstance(this);
     const dadDef = dataLoader.getDad(equippedDadId);
     if (dadDef) {
-      this.dad.setPhysicsProfile(dadDef.stats);
+      const resolvedProfile: DadPhysicsProfile = {
+        speed: DEFAULT_PHYSICS.speed * dadDef.stats.speed,
+        jumpForce: DEFAULT_PHYSICS.jumpForce * dadDef.stats.jumpForce,
+        spinRate: DEFAULT_PHYSICS.spinRate * dadDef.stats.spinRate,
+        airTime: DEFAULT_PHYSICS.airTime * dadDef.stats.airTime,
+        gravityScale: DEFAULT_PHYSICS.gravityScale * dadDef.stats.gravityScale,
+      };
+      this.dad.setPhysicsProfile(resolvedProfile);
       const dadTextureKey = `dad-${equippedDadId}`;
       if (this.textures.exists(dadTextureKey)) {
         this.dad.setTexture(dadTextureKey);
@@ -144,6 +151,7 @@ export class GameScene extends Phaser.Scene {
     this.comboSystem = new ComboSystem(this);
     this.specialMeterSystem = new SpecialMeterSystem(this);
     this.audienceMeterSystem = new AudienceMeterSystem(this);
+    this.comboSystem.setAudienceMeterSystem(this.audienceMeterSystem);
 
     // Apply slipper fill rate bonus
     if (slipperItem?.effect?.['specialFillRate']) {
@@ -239,14 +247,14 @@ export class GameScene extends Phaser.Scene {
   }
 
   private wireEvents(): void {
-    this.events.on(GameEvent.TRICK_COMPLETE, (result: { score: number; isSignature?: boolean }) => {
+    this.events.on(GameEvent.TRICK_COMPLETE, (result: TrickResult) => {
       this.comboSystem.onTrickComplete(result.score);
       this.specialMeterSystem.onTrickComplete();
       this.audienceMeterSystem.onTrickComplete();
       this.tricksLanded++;
 
-      // Screen effects for tricks
-      if (result.isSignature) {
+      // Screen effects for signature tricks
+      if (result.trick.isSignature) {
         this.screenEffects.signatureTrickEffect();
       }
     });
@@ -267,6 +275,10 @@ export class GameScene extends Phaser.Scene {
 
     this.events.on(GameEvent.COMBO_BREAK, () => {
       this.screenEffects.dropShake();
+    });
+
+    this.events.on(GameEvent.PANCAKE_DROPPED, () => {
+      this.comboSystem.onPancakeDropped();
     });
 
     this.events.on(GameEvent.PANCAKE_CAUGHT, () => {

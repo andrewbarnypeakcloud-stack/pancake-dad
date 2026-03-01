@@ -12,8 +12,8 @@ const STAGE_THRESHOLDS = {
 } as const;
 
 const METER_MAX = 100;
-const FILL_PER_TRICK = 8;
-const DECAY_PER_SECOND = 2;
+const FILL_PER_TRICK = 12;
+const DECAY_PER_SECOND = 1.2;
 
 export class AudienceMeterSystem {
   private scene: Phaser.Scene;
@@ -25,7 +25,7 @@ export class AudienceMeterSystem {
     this.scene = scene;
 
     this.scene.events.on(GameEvent.PANCAKE_DROPPED, () => {
-      this.meter = Phaser.Math.Clamp(this.meter - 15, 0, METER_MAX);
+      this.meter = Phaser.Math.Clamp(this.meter - 10, 0, METER_MAX);
       this.updateStage();
     });
   }

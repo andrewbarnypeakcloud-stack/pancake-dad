@@ -96,6 +96,19 @@ export interface DadPhysicsProfile {
   readonly gravityScale: number;
 }
 
+/** Player state machine states */
+export enum PlayerState {
+  IDLE = 'idle',
+  RUNNING = 'running',
+  JUMPING = 'jumping',
+  FALLING = 'falling',
+  GRABBING = 'grabbing',
+  MANUAL = 'manual',
+  SPINNING = 'spinning',
+  LANDED = 'landed',
+  STUNNED = 'stunned',
+}
+
 /** Audience meter stages (GDD 3.6) */
 export enum AudienceStage {
   WATCHING = 'watching',

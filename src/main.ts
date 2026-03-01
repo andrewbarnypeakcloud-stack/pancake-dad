@@ -47,3 +47,8 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 export const game = new Phaser.Game(config);
+
+// Dev-mode bridge for Playwright E2E tests
+if (import.meta.env.DEV) {
+  (window as unknown as Record<string, unknown>).__PANCAKE_DAD_GAME__ = game;
+}

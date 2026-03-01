@@ -1,10 +1,10 @@
-// Dad entity — player character with movement, jump, and physics
+// Dad entity — player character with state machine, movement, jump, and physics
 // See PancakeDad_GDD_v02_Browser.md sections 3.2, 4
 
 import Phaser from 'phaser';
-import { InputAction, DadPhysicsProfile } from '../types/game';
+import { InputAction, DadPhysicsProfile, PlayerState } from '../types/game';
 
-const DEFAULT_PHYSICS: DadPhysicsProfile = {
+export const DEFAULT_PHYSICS: DadPhysicsProfile = {
   speed: 300,
   jumpForce: 500,
   spinRate: 360,
@@ -12,14 +12,16 @@ const DEFAULT_PHYSICS: DadPhysicsProfile = {
   gravityScale: 1.0,
 };
 
+const LANDED_DURATION_MS = 100;
+const STUNNED_DURATION_MS = 500;
+
 export class Dad extends Phaser.GameObjects.Sprite {
   declare body: Phaser.Physics.Arcade.Body;
 
   private physics: DadPhysicsProfile;
-  private isGrounded: boolean = true;
+  private currentState: PlayerState = PlayerState.IDLE;
+  private stateTimer: number = 0;
   private rotation_: number = 0;
-  private isGrabbing: boolean = false;
-  private isInManual: boolean = false;
   private facingRight: boolean = true;
 
   constructor(scene: Phaser.Scene, x: number, y: number, profile?: DadPhysicsProfile) {
@@ -39,52 +41,131 @@ export class Dad extends Phaser.GameObjects.Sprite {
 
   handleInput(actions: Set<InputAction>, delta: number): void {
     const speed = this.physics.speed;
-    const wasGrounded = this.isGrounded;
-    this.isGrounded = this.body.blocked.down || this.body.touching.down;
+    const grounded = this.body.blocked.down || this.body.touching.down;
 
-    // Movement
-    if (actions.has(InputAction.MOVE_LEFT)) {
-      this.body.setVelocityX(-speed);
-      this.facingRight = false;
-      this.setFlipX(true);
-    } else if (actions.has(InputAction.MOVE_RIGHT)) {
-      this.body.setVelocityX(speed);
-      this.facingRight = true;
-      this.setFlipX(false);
-    } else {
+    // Advance state timer
+    this.stateTimer += delta;
+
+    // STUNNED: ignore all input
+    if (this.currentState === PlayerState.STUNNED) {
       this.body.setVelocityX(0);
+      if (this.stateTimer >= STUNNED_DURATION_MS) {
+        this.transitionTo(PlayerState.IDLE);
+      }
+      return;
     }
 
-    // Jump
-    if (actions.has(InputAction.JUMP) && this.isGrounded) {
-      this.body.setVelocityY(-this.physics.jumpForce);
-      this.isGrounded = false;
+    // LANDED: short recovery, exit immediately on move or jump
+    if (this.currentState === PlayerState.LANDED) {
+      const hasInput = actions.has(InputAction.MOVE_LEFT) ||
+        actions.has(InputAction.MOVE_RIGHT) ||
+        actions.has(InputAction.JUMP);
+      if (hasInput || this.stateTimer >= LANDED_DURATION_MS) {
+        this.transitionTo(PlayerState.IDLE);
+        // Fall through to process the input this frame
+      } else {
+        this.body.setVelocityX(0);
+        return;
+      }
     }
 
-    // Spin (in air only)
-    if (!this.isGrounded) {
+    // Detect landing transition from any airborne state
+    const wasAirborne = this.isAirborne();
+    if (wasAirborne && grounded) {
+      this.rotation_ = 0;
+      this.setAngle(0);
+      this.scene.events.emit('dad:landed');
+      this.transitionTo(PlayerState.LANDED);
+      this.body.setVelocityX(0);
+      return;
+    }
+
+    // Ground states
+    if (grounded) {
+      // Manual
+      if (actions.has(InputAction.MANUAL)) {
+        if (this.currentState !== PlayerState.MANUAL) {
+          this.transitionTo(PlayerState.MANUAL);
+        }
+      }
+      // Jump
+      else if (actions.has(InputAction.JUMP)) {
+        this.body.setVelocityY(-this.physics.jumpForce);
+        this.transitionTo(PlayerState.JUMPING);
+      }
+      // Horizontal movement
+      else if (actions.has(InputAction.MOVE_LEFT)) {
+        this.body.setVelocityX(-speed);
+        this.facingRight = false;
+        this.setFlipX(true);
+        if (this.currentState !== PlayerState.RUNNING) {
+          this.transitionTo(PlayerState.RUNNING);
+        }
+      } else if (actions.has(InputAction.MOVE_RIGHT)) {
+        this.body.setVelocityX(speed);
+        this.facingRight = true;
+        this.setFlipX(false);
+        if (this.currentState !== PlayerState.RUNNING) {
+          this.transitionTo(PlayerState.RUNNING);
+        }
+      }
+      // Idle
+      else {
+        this.body.setVelocityX(0);
+        if (this.currentState !== PlayerState.IDLE) {
+          this.transitionTo(PlayerState.IDLE);
+        }
+      }
+    }
+    // Air states
+    else {
+      // Horizontal air control
+      if (actions.has(InputAction.MOVE_LEFT)) {
+        this.body.setVelocityX(-speed);
+        this.facingRight = false;
+        this.setFlipX(true);
+      } else if (actions.has(InputAction.MOVE_RIGHT)) {
+        this.body.setVelocityX(speed);
+        this.facingRight = true;
+        this.setFlipX(false);
+      } else {
+        this.body.setVelocityX(0);
+      }
+
+      // Spin
       const spinDelta = (this.physics.spinRate * delta) / 1000;
       if (actions.has(InputAction.SPIN_LEFT)) {
         this.rotation_ -= spinDelta;
         this.setAngle(this.rotation_);
+        if (this.currentState !== PlayerState.SPINNING) {
+          this.transitionTo(PlayerState.SPINNING);
+        }
       } else if (actions.has(InputAction.SPIN_RIGHT)) {
         this.rotation_ += spinDelta;
         this.setAngle(this.rotation_);
+        if (this.currentState !== PlayerState.SPINNING) {
+          this.transitionTo(PlayerState.SPINNING);
+        }
+      }
+      // Grab
+      else if (actions.has(InputAction.GRAB)) {
+        if (this.currentState !== PlayerState.GRABBING) {
+          this.transitionTo(PlayerState.GRABBING);
+        }
+      }
+      // Falling vs Jumping
+      else if (this.body.velocity.y > 0) {
+        if (this.currentState !== PlayerState.FALLING) {
+          this.transitionTo(PlayerState.FALLING);
+        }
+      } else if (this.currentState !== PlayerState.JUMPING) {
+        // Still ascending, stay in jumping if not already
+        if (this.currentState !== PlayerState.SPINNING &&
+            this.currentState !== PlayerState.GRABBING) {
+          this.transitionTo(PlayerState.JUMPING);
+        }
       }
     }
-
-    // Reset rotation on land
-    if (this.isGrounded && !wasGrounded) {
-      this.rotation_ = 0;
-      this.setAngle(0);
-      this.scene.events.emit('dad:landed');
-    }
-
-    // Grab
-    this.isGrabbing = !this.isGrounded && actions.has(InputAction.GRAB);
-
-    // Manual
-    this.isInManual = this.isGrounded && actions.has(InputAction.MANUAL);
 
     // Restart
     if (actions.has(InputAction.RESTART)) {
@@ -92,16 +173,26 @@ export class Dad extends Phaser.GameObjects.Sprite {
     }
   }
 
+  private transitionTo(newState: PlayerState): void {
+    this.currentState = newState;
+    this.stateTimer = 0;
+  }
+
+  // --- Public API (backward-compatible) ---
+
   isAirborne(): boolean {
-    return !this.isGrounded;
+    return this.currentState === PlayerState.JUMPING ||
+      this.currentState === PlayerState.FALLING ||
+      this.currentState === PlayerState.SPINNING ||
+      this.currentState === PlayerState.GRABBING;
   }
 
   getIsGrabbing(): boolean {
-    return this.isGrabbing;
+    return this.currentState === PlayerState.GRABBING;
   }
 
   getIsInManual(): boolean {
-    return this.isInManual;
+    return this.currentState === PlayerState.MANUAL;
   }
 
   getRotationDegrees(): number {
@@ -110,6 +201,15 @@ export class Dad extends Phaser.GameObjects.Sprite {
 
   isFacingRight(): boolean {
     return this.facingRight;
+  }
+
+  getState(): PlayerState {
+    return this.currentState;
+  }
+
+  stun(): void {
+    this.transitionTo(PlayerState.STUNNED);
+    this.body.setVelocityX(0);
   }
 
   setPhysicsProfile(profile: DadPhysicsProfile): void {
