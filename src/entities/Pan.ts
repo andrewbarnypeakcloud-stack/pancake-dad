@@ -9,11 +9,11 @@ const DEFAULT_CATCH_RADIUS = 30;
 export class Pan extends Phaser.GameObjects.Sprite {
   private dad: Dad;
   private catchRadius: number;
-  private offsetX: number = 20;
-  private offsetY: number = -16;
+  private offsetX: number = 36;
+  private offsetY: number = -28;
 
   constructor(scene: Phaser.Scene, dad: Dad, catchRadius?: number) {
-    super(scene, dad.x + 20, dad.y - 16, 'pan');
+    super(scene, dad.x + 36, dad.y - 28, 'pan');
     this.dad = dad;
     this.catchRadius = catchRadius ?? DEFAULT_CATCH_RADIUS;
 

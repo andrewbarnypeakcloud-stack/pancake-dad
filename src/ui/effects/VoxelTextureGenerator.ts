@@ -624,12 +624,12 @@ export class VoxelTextureGenerator {
         COL.CABINET_DARK,
       );
 
-      // Small cozy window left-centre
-      this.drawWindow(gfx, 160, ceilingH + 60, 200, 160, 0xb0d8f0, COL.WINDOW_FRAME);
+      // Small cozy window centre (positioned between left and right cabinet banks)
+      this.drawWindow(gfx, 460, ceilingH + 60, 200, 160, 0xb0d8f0, COL.WINDOW_FRAME);
       // Hint of curtains
       gfx.fillStyle(0xd4a0a0);
-      gfx.fillRect(160, ceilingH + 60, 20, 160);
-      gfx.fillRect(340, ceilingH + 60, 20, 160);
+      gfx.fillRect(460, ceilingH + 60, 20, 160);
+      gfx.fillRect(640, ceilingH + 60, 20, 160);
 
       // Upper cabinets left
       this.drawCabinetDoors(gfx, 20, ceilingH + 20, 80, 100, 3, COL.CABINET, COL.CABINET_DARK);
@@ -638,7 +638,7 @@ export class VoxelTextureGenerator {
 
       // Counter lower cabinet doors
       this.drawCabinetDoors(gfx, 20, counterY + 20, 80, 140, 5, COL.CABINET, COL.CABINET_DARK);
-      this.drawCabinetDoors(gfx, 700, counterY + 20, 80, 140, 7, COL.CABINET, COL.CABINET_DARK);
+      this.drawCabinetDoors(gfx, 700, counterY + 20, 80, 140, 6, COL.CABINET, COL.CABINET_DARK);
 
       // Counter top surface line
       gfx.fillStyle(0xf0e0c8);

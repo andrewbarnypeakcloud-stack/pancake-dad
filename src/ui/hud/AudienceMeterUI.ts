@@ -51,7 +51,7 @@ export class AudienceMeterUI extends Phaser.GameObjects.Container {
     this.barBackground.setOrigin(0.5, 0);
     this.add(this.barBackground);
 
-    // Bar fill — grows from bottom up by positioning and scaling
+    // Bar fill — grows from bottom up by adjusting y and height together
     this.barFill = scene.add.rectangle(
       0,
       BAR_HEIGHT,
@@ -59,7 +59,7 @@ export class AudienceMeterUI extends Phaser.GameObjects.Container {
       0,
       AUDIENCE_STAGE_COLORS[AudienceStage.WATCHING]
     );
-    this.barFill.setOrigin(0.5, 1);
+    this.barFill.setOrigin(0.5, 0);
     this.add(this.barFill);
 
     // Stage label below bar
@@ -140,6 +140,7 @@ export class AudienceMeterUI extends Phaser.GameObjects.Container {
   private setFillForStage(stage: AudienceStage, animate: boolean): void {
     const targetFill = AudienceMeterUI.STAGE_FILL[stage];
     const targetHeight = BAR_HEIGHT * targetFill;
+    const targetY = BAR_HEIGHT - targetHeight;
     const targetColor = AUDIENCE_STAGE_COLORS[stage];
 
     this.barFill.setFillStyle(targetColor);
@@ -152,11 +153,13 @@ export class AudienceMeterUI extends Phaser.GameObjects.Container {
       this.fillTween = this.scene.tweens.add({
         targets: this.barFill,
         height: targetHeight,
+        y: targetY,
         duration: 400,
         ease: 'Quad.easeOut',
       });
     } else {
       this.barFill.height = targetHeight;
+      this.barFill.y = targetY;
     }
   }
 
