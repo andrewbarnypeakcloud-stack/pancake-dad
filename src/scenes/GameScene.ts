@@ -218,12 +218,20 @@ export class GameScene extends Phaser.Scene {
     // Tab focus handling (P1-21)
     this.setupTabFocusHandling();
 
-    // Pause key
+    // Pause key (desktop)
     this.input.keyboard?.on('keydown-ESC', () => this.togglePause());
     this.input.keyboard?.on('keydown-P', () => this.togglePause());
 
+    // Pause button (mobile touch)
+    this.events.on('touch:pause', () => this.togglePause());
+
     // Emit run start
     this.events.emit(GameEvent.RUN_START);
+
+    // Show first-play instructions overlay on mobile
+    if (this.inputManager.isMobileDevice()) {
+      this.showMobileInstructions();
+    }
   }
 
   update(time: number, delta: number): void {
@@ -358,9 +366,113 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  private showMobileInstructions(): void {
+    const hasSeenTutorial = localStorage.getItem('pancakeDad_seenMobileTutorial');
+    if (hasSeenTutorial) return;
+
+    // Pause the game while instructions are shown
+    this.isPaused = true;
+    this.timerEvent.paused = true;
+    this.physics.pause();
+    this.inputManager.getTouchControls()?.hide();
+
+    const { width, height } = this.cameras.main;
+
+    const overlay = this.add.container(0, 0);
+    overlay.setDepth(250);
+    overlay.setScrollFactor(0);
+
+    // Dim background
+    const bg = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75);
+    bg.setInteractive();
+    overlay.add(bg);
+
+    // Title
+    const title = this.add.text(width / 2, height * 0.1, 'HOW TO PLAY', {
+      fontFamily: 'Arial Black, Arial, sans-serif',
+      fontSize: '32px',
+      color: '#f5a623',
+      stroke: '#3D2B1F',
+      strokeThickness: 3,
+    }).setOrigin(0.5, 0.5).setScrollFactor(0);
+    overlay.add(title);
+
+    // Instructions
+    const instructions = [
+      { icon: '< >', text: 'ARROWS  \u2014  Move left / right' },
+      { icon: 'JUMP', text: 'TAP  \u2014  Jump & flip pancake' },
+      { icon: 'GRAB', text: 'HOLD in air  \u2014  Grab trick (+style)' },
+      { icon: 'MAN', text: 'HOLD on ground  \u2014  Manual (extend combo)' },
+      { icon: '||', text: 'TOP-RIGHT  \u2014  Pause game' },
+    ];
+
+    const startY = height * 0.25;
+    const lineSpacing = 50;
+    instructions.forEach((item, index) => {
+      const y = startY + index * lineSpacing;
+
+      // Icon badge
+      const badge = this.add.rectangle(width * 0.3, y, 70, 34, 0xf5a623, 0.8)
+        .setScrollFactor(0);
+      overlay.add(badge);
+
+      const iconText = this.add.text(width * 0.3, y, item.icon, {
+        fontFamily: 'Arial Black, Arial, sans-serif',
+        fontSize: '14px',
+        color: '#3D2B1F',
+      }).setOrigin(0.5, 0.5).setScrollFactor(0);
+      overlay.add(iconText);
+
+      // Description
+      const desc = this.add.text(width * 0.55, y, item.text, {
+        fontFamily: 'Arial, sans-serif',
+        fontSize: '16px',
+        color: '#ffffff',
+      }).setOrigin(0, 0.5).setScrollFactor(0);
+      overlay.add(desc);
+    });
+
+    // Tip
+    const tip = this.add.text(width / 2, height * 0.72, 'TIP: Hold MOVE + JUMP together to SPIN!', {
+      fontFamily: 'Arial, sans-serif',
+      fontSize: '16px',
+      color: '#f5a623',
+      fontStyle: 'italic',
+    }).setOrigin(0.5, 0.5).setScrollFactor(0);
+    overlay.add(tip);
+
+    // Dismiss prompt
+    const tapPrompt = this.add.text(width / 2, height * 0.88, 'TAP ANYWHERE TO START', {
+      fontFamily: 'Arial Black, Arial, sans-serif',
+      fontSize: '20px',
+      color: '#ffffff',
+    }).setOrigin(0.5, 0.5).setScrollFactor(0);
+    overlay.add(tapPrompt);
+
+    this.tweens.add({
+      targets: tapPrompt,
+      alpha: 0.3,
+      duration: 600,
+      yoyo: true,
+      repeat: -1,
+    });
+
+    // Dismiss on tap
+    bg.on('pointerdown', () => {
+      overlay.destroy();
+      this.inputManager.getTouchControls()?.show();
+      this.isPaused = false;
+      this.timerEvent.paused = false;
+      this.physics.resume();
+      localStorage.setItem('pancakeDad_seenMobileTutorial', '1');
+    });
+  }
+
   private togglePause(): void {
+    const touchControls = this.inputManager.getTouchControls();
     if (this.isPaused) {
       this.pauseMenu.hide();
+      touchControls?.show();
       this.isPaused = false;
       this.timerEvent.paused = false;
       this.physics.resume();
@@ -369,6 +481,7 @@ export class GameScene extends Phaser.Scene {
       this.isPaused = true;
       this.timerEvent.paused = true;
       this.physics.pause();
+      touchControls?.hide();
       this.pauseMenu.show();
       this.events.emit(GameEvent.RUN_PAUSED);
     }

@@ -135,11 +135,15 @@ export class MainMenu extends Phaser.GameObjects.Container {
     this.highScoreText.setOrigin(0.5, 0.5);
     this.add(this.highScoreText);
 
-    // ── Controls Hint ──
+    // ── Controls Hint (platform-aware) ──
+    const isMobile = !scene.sys.game.device.os.desktop;
+    const controlsMessage = isMobile
+      ? 'Tap buttons to move & jump | Hold GRAB in air for tricks'
+      : 'WASD to move | SPACE to jump | J grab | K manual';
     this.controlsHint = scene.add.text(
       width / 2,
       height * 0.9,
-      'WASD to move | SPACE to jump | J grab | K manual',
+      controlsMessage,
       UI_TEXT_STYLES.MUTED
     );
     this.controlsHint.setOrigin(0.5, 0.5);
