@@ -4,7 +4,7 @@
 import Phaser from 'phaser';
 import { Dad } from './Dad';
 
-const DEFAULT_CATCH_RADIUS = 30;
+const DEFAULT_CATCH_RADIUS = 40;
 
 export class Pan extends Phaser.GameObjects.Sprite {
   private dad: Dad;

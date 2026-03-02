@@ -7,13 +7,13 @@
       "speed": 1.0,
       "jumpForce": 1.0,
       "spinRate": 1.0,
-      "airTime": 1.0,
-      "gravityScale": 1.0,
+      "airTime": 1.1,
+      "gravityScale": 0.9,
       "styleMultiplier": 1.0
     },
     "signatureTrick": {
       "name": "Perfect Flip",
-      "description": "360 spin, eyes closed — pure dad instinct",
+      "description": "360 spin both ways, eyes closed — pure dad instinct",
       "baseScore": 1000,
       "cinematicDuration": 1.5,
       "requiresFullSpecial": true
@@ -31,13 +31,13 @@
       "speed": 1.3,
       "jumpForce": 1.0,
       "spinRate": 1.25,
-      "airTime": 0.95,
-      "gravityScale": 1.05,
+      "airTime": 1.05,
+      "gravityScale": 0.95,
       "styleMultiplier": 0.9
     },
     "signatureTrick": {
       "name": "Double Pirouette Catch",
-      "description": "Two full pirouettes before snagging the pancake mid-air",
+      "description": "Full pirouette while sliding right — snagging the pancake mid-air",
       "baseScore": 1200,
       "cinematicDuration": 1.5,
       "requiresFullSpecial": true
@@ -56,13 +56,13 @@
       "speed": 0.9,
       "jumpForce": 1.0,
       "spinRate": 0.95,
-      "airTime": 1.0,
-      "gravityScale": 1.0,
+      "airTime": 1.1,
+      "gravityScale": 0.9,
       "styleMultiplier": 1.4
     },
     "signatureTrick": {
       "name": "Iron Pan Zero-Splash Rotation",
-      "description": "Perfectly controlled rotation — not a single drop of batter spilled",
+      "description": "Perfectly controlled reverse rotation — not a single drop of batter spilled",
       "baseScore": 1500,
       "cinematicDuration": 1.5,
       "requiresFullSpecial": true
@@ -82,12 +82,12 @@
       "jumpForce": 1.2,
       "spinRate": 1.0,
       "airTime": 1.3,
-      "gravityScale": 0.85,
+      "gravityScale": 0.8,
       "styleMultiplier": 1.0
     },
     "signatureTrick": {
       "name": "The Smokestack 900",
-      "description": "Two and a half rotations with maximum altitude — the crowd goes wild",
+      "description": "Full rotation both ways while moving — the crowd goes wild",
       "baseScore": 1800,
       "cinematicDuration": 1.5,
       "requiresFullSpecial": true
@@ -106,13 +106,13 @@
       "speed": 1.0,
       "jumpForce": 0.95,
       "spinRate": 1.1,
-      "airTime": 1.0,
-      "gravityScale": 1.0,
+      "airTime": 1.1,
+      "gravityScale": 0.9,
       "styleMultiplier": 3.0
     },
     "signatureTrick": {
       "name": "Full Kitchen Lap Blind Catch",
-      "description": "Slides across the entire kitchen blindfolded and catches the pancake behind his back",
+      "description": "Slides across the entire kitchen spinning both ways and catches the pancake behind his back",
       "baseScore": 2000,
       "cinematicDuration": 1.5,
       "requiresFullSpecial": true

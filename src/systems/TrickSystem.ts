@@ -30,32 +30,12 @@ const BUILT_IN_TRICKS: TrickDefinition[] = [
     requiresSpecialMeter: false,
   },
   {
-    id: 'grab',
-    name: 'The Grab',
-    inputs: [InputAction.JUMP, InputAction.GRAB],
-    baseScore: 250,
-    description: 'Clutches spatula mid-air',
-    animationKey: 'trick_grab',
-    isSignature: false,
-    requiresSpecialMeter: false,
-  },
-  {
     id: 'blind_flip',
     name: 'The Blind Flip',
     inputs: [InputAction.JUMP, InputAction.SPIN_RIGHT],
     baseScore: 400,
     description: 'Back turned, no-look catch',
     animationKey: 'trick_blind',
-    isSignature: false,
-    requiresSpecialMeter: false,
-  },
-  {
-    id: 'double_stack',
-    name: 'The Double Stack',
-    inputs: [InputAction.JUMP, InputAction.GRAB, InputAction.SPIN_LEFT],
-    baseScore: 600,
-    description: 'Two pancakes at once',
-    animationKey: 'trick_doublestack',
     isSignature: false,
     requiresSpecialMeter: false,
   },
@@ -73,7 +53,6 @@ export class TrickSystem {
   private trickStarted: boolean = false;
   private airTimeAccumulated: number = 0;
   private hasFlipped: boolean = false;
-  private grabHoldTime: number = 0;
 
   constructor(scene: Phaser.Scene, dad: Dad, pancake: Pancake) {
     this.scene = scene;
@@ -104,11 +83,6 @@ export class TrickSystem {
         this.currentInputs.add(action);
       }
 
-      // Track grab hold time for style bonus
-      if (actions.has(InputAction.GRAB)) {
-        this.grabHoldTime += delta;
-      }
-
       // Auto-flip pancake on jump if not already flipped
       if (!this.hasFlipped && this.airTimeAccumulated > 100) {
         this.flipPancake(actions);
@@ -124,7 +98,6 @@ export class TrickSystem {
     this.currentInputs.clear();
     this.airTimeAccumulated = 0;
     this.hasFlipped = false;
-    this.grabHoldTime = 0;
     this.currentInputs.add(InputAction.JUMP);
     this.scene.events.emit(GameEvent.TRICK_START);
   }
@@ -134,15 +107,10 @@ export class TrickSystem {
     this.trickStarted = false;
 
     if (trick) {
-      const grabBonus = Phaser.Math.Clamp(this.grabHoldTime / 500, 0, 0.5);
-      const isPerfect = this.airTimeAccumulated > 400 && this.grabHoldTime > 200;
-      const score = Phaser.Math.FloorTo(trick.baseScore * (1 + grabBonus) * (isPerfect ? 1.5 : 1));
-
       const result: TrickResult = {
         trick,
-        score,
+        score: trick.baseScore,
         multiplier: 1,
-        isPerfect,
       };
 
       this.scene.events.emit(GameEvent.TRICK_COMPLETE, result);
@@ -184,9 +152,9 @@ export class TrickSystem {
     if (!this.pancake.isCaught()) return;
 
     const spinDir = actions.has(InputAction.SPIN_LEFT) ? -1 : actions.has(InputAction.SPIN_RIGHT) ? 1 : 0;
-    const flipVelocityX = spinDir * 50;
-    const flipVelocityY = -350;
-    const spinSpeed = 5 + Math.abs(spinDir) * 3;
+    const flipVelocityX = spinDir * 30;
+    const flipVelocityY = -250;
+    const spinSpeed = 3 + Math.abs(spinDir) * 2;
 
     this.pancake.flip(flipVelocityX, flipVelocityY, spinSpeed);
   }

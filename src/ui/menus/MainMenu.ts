@@ -138,8 +138,8 @@ export class MainMenu extends Phaser.GameObjects.Container {
     // ── Controls Hint (platform-aware) ──
     const isMobile = !scene.sys.game.device.os.desktop;
     const controlsMessage = isMobile
-      ? 'Tap buttons to move & jump | Hold GRAB in air for tricks'
-      : 'WASD to move | SPACE to jump | J grab | K manual';
+      ? 'Tap buttons to move & jump | Move + Jump = Spin!'
+      : 'WASD to move | SPACE to jump | Move + Jump = Spin!';
     this.controlsHint = scene.add.text(
       width / 2,
       height * 0.9,

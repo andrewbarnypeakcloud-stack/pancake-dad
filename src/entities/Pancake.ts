@@ -22,6 +22,7 @@ export class Pancake extends Phaser.GameObjects.Sprite {
     this.body.setBounce(0);
     this.body.setSize(28, 6);
     this.body.setAllowGravity(false);
+    this.body.setGravityY(-300); // Counteract world gravity: effective 500 vs 800
     this.setDepth(11);
 
     // Start on the pan

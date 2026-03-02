@@ -62,9 +62,9 @@
   {
     "id": "all-basic-tricks",
     "name": "Full Repertoire",
-    "description": "Perform all 6 basic tricks in a single run",
+    "description": "Perform all 3 basic tricks in a single run",
     "type": "trick",
-    "target": 6,
+    "target": 3,
     "reward": {
       "dadBucks": 200
     }
@@ -145,6 +145,16 @@
     "name": "Blind Flip Master",
     "description": "Land The Blind Flip 10 times across all runs",
     "type": "trick",
+    "target": 10,
+    "reward": {
+      "dadBucks": 150
+    }
+  },
+  {
+    "id": "obstacle-jumper",
+    "name": "Obstacle Course",
+    "description": "Clear 10 obstacles in a single run",
+    "type": "misc",
     "target": 10,
     "reward": {
       "dadBucks": 150
