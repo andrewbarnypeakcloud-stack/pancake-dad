@@ -8,12 +8,12 @@ import { UI_COLORS } from '../../types/ui';
 
 const BUTTON_IDLE_ALPHA = 0.3;
 const BUTTON_ACTIVE_ALPHA = 0.55;
-const DPAD_RADIUS = 36;
-const JUMP_RADIUS = 56;
+const DPAD_RADIUS = 50;
+const JUMP_RADIUS = 74;
 const PAUSE_SIZE = 36;
 const LABEL_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
   fontFamily: 'Arial Black, Arial, sans-serif',
-  fontSize: '14px',
+  fontSize: '18px',
   color: '#ffffff',
 };
 
@@ -67,8 +67,8 @@ export class TouchControls extends Phaser.GameObjects.Container {
   // --- Button creation ---
 
   private createDpad(_width: number, height: number): void {
-    const baseY = height - 70;
-    const leftX = 70;
+    const baseY = height - 90;
+    const leftX = 80;
     const rightX = leftX + DPAD_RADIUS * 2 + 20;
 
     this.createHoldButton(leftX, baseY, DPAD_RADIUS, '<', InputAction.MOVE_LEFT);
@@ -76,8 +76,8 @@ export class TouchControls extends Phaser.GameObjects.Container {
   }
 
   private createJumpButton(width: number, height: number): void {
-    const x = width - 90;
-    const y = height - 90;
+    const x = width - 100;
+    const y = height - 100;
 
     this.createTapButton(x, y, JUMP_RADIUS, 'JUMP', InputAction.JUMP, UI_COLORS.PRIMARY);
   }
