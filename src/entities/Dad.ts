@@ -9,7 +9,7 @@ export const DEFAULT_PHYSICS: DadPhysicsProfile = {
   jumpForce: 450,
   spinRate: 360,
   airTime: 1.0,
-  gravityScale: 0.85,
+  gravityScale: 1.0,
 };
 
 const LANDED_DURATION_MS = 100;

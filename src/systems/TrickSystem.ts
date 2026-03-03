@@ -153,7 +153,7 @@ export class TrickSystem {
 
     const spinDir = actions.has(InputAction.SPIN_LEFT) ? -1 : actions.has(InputAction.SPIN_RIGHT) ? 1 : 0;
     const flipVelocityX = spinDir * 30;
-    const flipVelocityY = -250;
+    const flipVelocityY = -300;
     const spinSpeed = 3 + Math.abs(spinDir) * 2;
 
     this.pancake.flip(flipVelocityX, flipVelocityY, spinSpeed);
